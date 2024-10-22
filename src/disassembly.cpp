@@ -67,7 +67,7 @@ int fill_asm_cmds_array(const char* filename, disassembly_cmd_array* disassembly
         return 1;//TODO dont return enum value
     }
 
-    int number_of_cmd     = 0;
+    size_t number_of_cmd     = 0;
     char value_of_cmd[10]     = "";
     bool hlt_not_found     = true;
 

@@ -1,15 +1,22 @@
 CXX                = gcc-14
 
-SRC                = main.cpp stack.cpp recalloc.cpp stack_dump.cpp stack_public.cpp stack_security.cpp
+STACK_SRC          = stack.cpp recalloc.cpp stack_dump.cpp stack_public.cpp stack_security.cpp
+
 ASSEMBLY_SRC       = assembly.cpp
 ASSEMBLY_TARGET    = assembly
+
 DISASSEMBLY_SRC    = disassembly.cpp
 DISASSEMBLY_TARGET = disassembly
+
+PROCESSOR_SRC      = processor.cpp
+PROCESSOR_TARGET   = processor
+
 SUBMODULE_SRC      = Custom-asserts/Color/color_printf.cpp #TODO stack compiling
 
 BUILD_DIR    = ./build/
 SRC_DIR      = ./src/
-CFLAGS       = -I inc -I Custom-asserts -I Custom-asserts/Color -I Stack/inc
+STACK_DIR    = ./Stack/
+CFLAGS       = -I inc -I Custom-asserts -I Custom-asserts/Color -I Stack/inc -I Stack/Color-printf
 
 TARGET       = stack.out
 OBJECT       = $(patsubst %.cpp, %.o, $(SRC))
@@ -56,15 +63,24 @@ ded : $(addprefix $(SRC_DIR), $(SRC))
 
 assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	clear
-	$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(ASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
 	$(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 
 disassembly : $(addprefix $(SRC_DIR), $(DISASSEMBLY_SRC))
 	clear
-	$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(DISASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
 	$(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
+
+processor : $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
+	clear
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR),\
+	$(addprefix $(SRC_DIR), $(STACK_SRC))) -o\
+	$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
+
+	@printf "$(GREEN_TEXT)$(PROCESSOR_TARGET) COMPILED$(DEFAULT_TEXT)\n"
+	$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
 doxy :
 	doxygen

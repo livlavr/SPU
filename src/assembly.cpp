@@ -28,7 +28,7 @@ int fill_bin_cmds_array(const char* filename, assembly_cmd_array* assembly) //TO
     {
         color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", filename);
 
-        return POINTER_IS_NULL; //TODO I don't return enum type
+        return FILE_OPEN_ERROR; //TODO I don't return enum type
     }
 
     size_t number_of_cmd = 0;
