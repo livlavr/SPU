@@ -1,11 +1,13 @@
 #ifndef ASSEMBLY_H_
 #define ASSEMBLY_H_
 
+const int POISON_INDEX = -1;
+
 struct labels
 {
-    char   name[MAX_CMD_SIZE] = "";
-    size_t index_to_jmp       = 0;
-}
+    char   name[MAX_CMD_SIZE + 1] = "";
+    int index_to_jmp              = POISON_INDEX;
+};
 
 struct assembly_cmd_array
 {
@@ -18,6 +20,7 @@ struct assembly_cmd_array
 TYPE_OF_ERROR fill_bin_cmds_array(const char* buffer  , assembly_cmd_array* assembly);
 TYPE_OF_ERROR output_cmds_to_bin (const char* filename, const assembly_cmd_array* assembly);
 void          process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* assembly,
-                               size_t* number_of_cmd, char* cmd);
+                               int* number_of_cmd, char* cmd);
+void          process_label(assembly_cmd_array* assembly, int number_of_cmd, char cmd[]);
 
 #endif
