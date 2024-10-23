@@ -18,7 +18,7 @@ SRC_DIR      = ./src/
 STACK_DIR    = ./Stack/
 CFLAGS       = -I inc -I Custom-asserts -I Custom-asserts/Color -I Stack/inc -I Stack/Color-printf
 
-TARGET       = stack.out
+TARGET       = SPU
 OBJECT       = $(patsubst %.cpp, %.o, $(SRC))
 BUILD_OBJ    = $(addprefix $(BUILD_DIR), $(OBJECT))
 
@@ -45,7 +45,12 @@ vpath %.o   $(BUILD_DIR)
 vpath %.cpp $(SRC_DIR)
 
 .PHONY: clean all
-all   : $(TARGET)
+all   :
+	clear
+	make assembly
+	make processor
+	@printf "$(GREEN_TEXT)$(TARGET) COMPILED$(DEFAULT_TEXT)\n"
+	$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
 $(TARGET) :  $(BUILD_DIR) $(OBJECT)
 	$(CXX)   $(BUILD_OBJ) -o $(TARGET) -D _NDEBUG
@@ -57,11 +62,11 @@ $(BUILD_DIR) :
 $(OBJECT) : %.o : %.cpp
 	$(CXX) $(CFLAGS) -c $^ -o $(addprefix $(BUILD_DIR), $@)
 
-ded : $(addprefix $(SRC_DIR), $(SRC))
-	$(CXX) $(CFLAGS) $^ -o $(TARGET) $(DED_FLAGS)
-	@printf "$(YELLOW_TEXT)SKOLKO MOJNO BOJE MOY BLYAT'$(DEFAULT_TEXT)\n"
-
 assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
+	$(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
+
+quick_assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	clear
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(ASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
@@ -74,17 +79,15 @@ disassembly : $(addprefix $(SRC_DIR), $(DISASSEMBLY_SRC))
 	$(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
 
 processor : $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR),\
+	$(addprefix $(SRC_DIR), $(STACK_SRC))) -o $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
+
+quick_processor : $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
 	clear
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR),\
-	$(addprefix $(SRC_DIR), $(STACK_SRC))) -o\
-	$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
-
+	$(addprefix $(SRC_DIR), $(STACK_SRC))) -o $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 	@printf "$(GREEN_TEXT)$(PROCESSOR_TARGET) COMPILED$(DEFAULT_TEXT)\n"
 	$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
 doxy :
 	doxygen
-
-clean :
-	@rm -f -r $(addprefix $(BUILD_DIR), *.o) $(TARGET) *.dSYM dump.txt
-	@printf  "$(YELLOW_TEXT)$(TARGET) CLEANED$(DEFAULT_TEXT)\n"
