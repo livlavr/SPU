@@ -47,7 +47,7 @@ vpath %.cpp $(SRC_DIR)
 .PHONY: clean all
 all   :
 	clear
-	make assembly
+	make quick_assembly
 	make processor
 	@printf "$(GREEN_TEXT)$(TARGET) COMPILED$(DEFAULT_TEXT)\n"
 	$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
@@ -62,11 +62,11 @@ $(BUILD_DIR) :
 $(OBJECT) : %.o : %.cpp
 	$(CXX) $(CFLAGS) -c $^ -o $(addprefix $(BUILD_DIR), $@)
 
-assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
+quick_assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 	$(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 
-quick_assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
+assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	clear
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(ASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
