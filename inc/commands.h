@@ -3,13 +3,14 @@
 
 enum CMDS_DISASSEMBLY
 {
-    DISASSEMBLY_PUSH   = 10,
-    DISASSEMBLY_POP    = 20,
-    DISASSEMBLY_ADD    = 30,
-    DISASSEMBLY_SUB    = 40,
-    DISASSEMBLY_DIV    = 50,
-    DISASSEMBLY_OUT    = 60,
-    DISASSEMBLY_HLT    = 70,
+    DISASSEMBLY_HLT    = 10,
+    DISASSEMBLY_PUSH   = 20,
+    DISASSEMBLY_POP    = 30,
+    DISASSEMBLY_ADD    = 40,
+    DISASSEMBLY_SUB    = 50,
+    DISASSEMBLY_DIV    = 60,
+    DISASSEMBLY_OUT    = 70,
+    DISASSEMBLY_MUL    = 80,
     DISASSEMBLY_PUSHR  = 100,
     DISASSEMBLY_POPR   = 200,
     DISASSEMBLY_JA     = 1000,
@@ -30,6 +31,7 @@ const char* ASSEMBLY_ADD    = "ADD" ;
 const char* ASSEMBLY_SUB    = "SUB" ;
 const char* ASSEMBLY_DIV    = "DIV" ;
 const char* ASSEMBLY_OUT    = "OUT" ;
+const char* ASSEMBLY_MUL    = "MUL" ;
 const char* ASSEMBLY_HLT    = "HLT" ;
 const char* ASSEMBLY_REG_AX = "AX"  ;
 const char* ASSEMBLY_REG_BX = "BX"  ;
@@ -45,6 +47,7 @@ const char* ASSEMBLY_JNE    = "JNE" ;
 const size_t MAX_NUMBER_OF_CMDS      = 50;
 const size_t MAX_CMD_SIZE            = 15;
 const size_t MAX_NUMBER_OF_LABELS    = 10;
+const size_t NUMBER_OF_REGISTERS     = 5;
 const size_t MAX_SIZE_OF_ASM_PROGRAM = MAX_NUMBER_OF_CMDS * MAX_CMD_SIZE * 2;
 const char   LABEL_NAME_ENDING       = ':';
 

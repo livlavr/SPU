@@ -97,6 +97,11 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             // printf("%s\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_DIV;
         }
+        else if(!strcmp(ASSEMBLY_MUL, cmd))
+        {
+            // printf("%s\n", cmd);
+            assembly->commands[number_of_cmd++] = DISASSEMBLY_MUL;
+        }
         else if(!strcmp(ASSEMBLY_OUT, cmd))
         {
             // printf("%s\n", cmd);
@@ -188,8 +193,8 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             {
                 strncpy(assembly->tags[assembly->size_of_labels_array].name, cmd, MAX_CMD_SIZE + 1); //TODO delete +1
                 assembly->tags[assembly->size_of_labels_array].index_to_jmp = number_of_cmd;
-                printf("%s ",   assembly->tags[assembly->size_of_labels_array].name);
-                printf("%d\n", assembly->tags[assembly->size_of_labels_array].index_to_jmp);
+                // printf("%s ",   assembly->tags[assembly->size_of_labels_array].name);
+                // printf("%d\n", assembly->tags[assembly->size_of_labels_array].index_to_jmp);
                 (assembly->size_of_labels_array)++;
             }
         }
@@ -210,10 +215,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
     }
     assembly->size_of_commands_array = number_of_cmd;
 
-    for(int i = 0; i < assembly->size_of_commands_array; i++)
-    {
-        printf("%d - cmd number %d\n", assembly->commands[i], i);
-    }
+    // for(int i = 0; i < assembly->size_of_commands_array; i++)
+    // {
+    //     printf("%d\t- cmd number %d\n", assembly->commands[i], i);
+    // }
 
     fclose(asm_file);
 
@@ -259,7 +264,7 @@ void process_label(assembly_cmd_array* assembly, int number_of_cmd, char cmd[])
             {
                 assembly->commands[number_of_cmd] = assembly->tags[index_of_label].index_to_jmp;
 
-                printf("%d - index in cmd\n", assembly->commands[number_of_cmd]);
+                // printf("%d - index in cmd\n", assembly->commands[number_of_cmd]);
 
                 break;
             }

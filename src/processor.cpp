@@ -12,7 +12,7 @@ int main()
     stack* st = NULL;
     stack_init(st, 10);
 
-    stack_elem registers[5] = {};
+    stack_elem registers[NUMBER_OF_REGISTERS] = {};
 
     const char* filename = "src/spu_commands.bin";
     FILE* bin_file = fopen(filename, "rb");
@@ -48,7 +48,7 @@ int main()
 
                 push(st, value_of_cmd);
 
-                printf("PUSH\n");
+                // printf("PUSH\n");
 
                 break;
 
@@ -58,7 +58,7 @@ int main()
 
                 push(st, value_of_cmd);
 
-                printf("PUSHR\n");
+                // printf("PUSHR\n");
 
                 break;
 
@@ -67,7 +67,7 @@ int main()
                 pop(st, &x);
                 registers[commands[ip++]] = x;
 
-                printf("POPR\n");
+                // printf("POPR\n");
 
                 break;
 
@@ -78,7 +78,7 @@ int main()
 
                 ip++;
 
-                printf("ADD\n");
+                // printf("ADD\n");
 
                 break;
 
@@ -89,7 +89,7 @@ int main()
 
                 ip++;
 
-                printf("SUB\n");
+                // printf("SUB\n");
 
                 break;
 
@@ -99,15 +99,127 @@ int main()
                 push(st, x / y);
                 ip++;
 
-                printf("DIV\n");
+                // printf("DIV\n");
 
                 break;
 
-            case DISASSEMBLY_OUT:
+            case DISASSEMBLY_MUL:
+                pop(st, &y);
+                pop(st, &x);
+                push(st, x * y);
+                ip++;
+
+                // printf("MUL\n");
+
+                break;
+
+            case DISASSEMBLY_OUT: //TODO make print cmd
                 pop(st, &x);
                 color_printf(GREEN_TEXT, BOLD, "RESULT: %d\n", x);
 
                 ip++;
+
+                break;
+
+            case DISASSEMBLY_JA:
+                pop(st, &y);
+                pop(st, &x);
+
+                if(x > y)
+                {
+                    ip++;
+                    ip = commands[ip];
+                }
+                else
+                {
+                    ip++;
+                    ip++;
+                }
+
+                break;
+
+            case DISASSEMBLY_JAE:
+                pop(st, &y);
+                pop(st, &x);
+
+                if(x >= y)
+                {
+                    ip++;
+                    ip = commands[ip];
+                }
+                else
+                {
+                    ip++;
+                    ip++;
+                }
+
+                break;
+
+            case DISASSEMBLY_JB:
+                pop(st, &y);
+                pop(st, &x);
+
+                if(x < y)
+                {
+                    ip++;
+                    ip = commands[ip];
+                }
+                else
+                {
+                    ip++;
+                    ip++;
+                }
+
+                break;
+
+            case DISASSEMBLY_JBE:
+                pop(st, &y);
+                pop(st, &x);
+
+                if(x <= y)
+                {
+                    ip++;
+                    ip = commands[ip];
+                }
+                else
+                {
+                    ip++;
+                    ip++;
+                }
+
+                break;
+
+            case DISASSEMBLY_JE:
+                pop(st, &y);
+                pop(st, &x);
+
+                if(x == y)
+                {
+                    ip++;
+                    ip = commands[ip];
+                }
+                else
+                {
+                    ip++;
+                    ip++;
+                }
+
+                break;
+
+            case DISASSEMBLY_JNE:
+                pop(st, &y);
+                pop(st, &x);
+
+                if(x != y)
+                {
+                    ip++;
+                    ip = commands[ip];
+                }
+                else
+                {
+                    ip++;
+                    ip++;
+                }
 
                 break;
 

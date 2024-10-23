@@ -59,7 +59,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, "\n");
-                printf("%s", disassembly->commands);
+                // printf("%s", disassembly->commands);
                 number_of_cmd++;
 
                 break;
@@ -67,13 +67,13 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
             case DISASSEMBLY_PUSHR:
                 number_of_cmd++;
                 process_register(ASSEMBLY_PUSH, disassembly, &number_of_cmd, bin_commands[number_of_cmd]);
-                printf("%s", disassembly->commands);
+                // printf("%s", disassembly->commands);
                 break;
 
             case DISASSEMBLY_POP:
                 strcat(disassembly->commands, ASSEMBLY_POP);
                 strcat(disassembly->commands, "\n");
-                printf("%s", disassembly->commands);
+                // printf("%s", disassembly->commands);
                 number_of_cmd++;
 
                 break;
@@ -81,14 +81,14 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
             case DISASSEMBLY_POPR:
                 number_of_cmd++;
                 process_register(ASSEMBLY_POP, disassembly, &number_of_cmd, bin_commands[number_of_cmd]);
-                printf("%s", disassembly->commands);
+                // printf("%s", disassembly->commands);
 
                 break;
 
             case DISASSEMBLY_ADD:
                 strcat(disassembly->commands, ASSEMBLY_ADD);
                 strcat(disassembly->commands, "\n");
-                printf("%s", disassembly->commands);
+                // printf("%s", disassembly->commands);
                 number_of_cmd++;
 
                 break;
@@ -96,7 +96,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
             case DISASSEMBLY_SUB:
                 strcat(disassembly->commands, ASSEMBLY_SUB);
                 strcat(disassembly->commands, "\n");
-                printf("%s", disassembly->commands);
+                // printf("%s", disassembly->commands);
                 number_of_cmd++;
 
                 break;
@@ -104,7 +104,15 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
             case DISASSEMBLY_DIV:
                 strcat(disassembly->commands, ASSEMBLY_DIV);
                 strcat(disassembly->commands, "\n");
-                printf("%s", disassembly->commands);
+                // printf("%s", disassembly->commands);
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_MUL:
+                strcat(disassembly->commands, ASSEMBLY_MUL);
+                strcat(disassembly->commands, "\n");
+                // printf("%s", disassembly->commands);
                 number_of_cmd++;
 
                 break;
@@ -112,7 +120,91 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
             case DISASSEMBLY_OUT:
                 strcat(disassembly->commands, ASSEMBLY_OUT);
                 strcat(disassembly->commands, "\n");
-                printf("%s", disassembly->commands);
+                // printf("%s", disassembly->commands);
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_JA:
+                strcat(disassembly->commands, ASSEMBLY_JA);
+                strcat(disassembly->commands, " ");
+                number_of_cmd++;
+
+                int_to_str(bin_commands[number_of_cmd], value_of_cmd);
+                strcat(disassembly->commands, value_of_cmd);
+                strcat(disassembly->commands, ":");
+                strcat(disassembly->commands, "\n");
+                // printf("%s", disassembly->commands);
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_JAE:
+                strcat(disassembly->commands, ASSEMBLY_JAE);
+                strcat(disassembly->commands, " ");
+                number_of_cmd++;
+
+                int_to_str(bin_commands[number_of_cmd], value_of_cmd);
+                strcat(disassembly->commands, value_of_cmd);
+                strcat(disassembly->commands, ":");
+                strcat(disassembly->commands, "\n");
+                // printf("%s", disassembly->commands);
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_JB:
+                strcat(disassembly->commands, ASSEMBLY_JB);
+                strcat(disassembly->commands, " ");
+                number_of_cmd++;
+
+                int_to_str(bin_commands[number_of_cmd], value_of_cmd);
+                strcat(disassembly->commands, value_of_cmd);
+                strcat(disassembly->commands, ":");
+                strcat(disassembly->commands, "\n");
+                // printf("%s", disassembly->commands);
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_JBE:
+                strcat(disassembly->commands, ASSEMBLY_JBE);
+                strcat(disassembly->commands, " ");
+                number_of_cmd++;
+
+                int_to_str(bin_commands[number_of_cmd], value_of_cmd);
+                strcat(disassembly->commands, value_of_cmd);
+                strcat(disassembly->commands, ":");
+                strcat(disassembly->commands, "\n");
+                // printf("%s", disassembly->commands);
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_JE:
+                strcat(disassembly->commands, ASSEMBLY_JE);
+                strcat(disassembly->commands, " ");
+                number_of_cmd++;
+
+                int_to_str(bin_commands[number_of_cmd], value_of_cmd);
+                strcat(disassembly->commands, value_of_cmd);
+                strcat(disassembly->commands, ":");
+                strcat(disassembly->commands, "\n");
+                // printf("%s", disassembly->commands);
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_JNE:
+                strcat(disassembly->commands, ASSEMBLY_JNE);
+                strcat(disassembly->commands, " ");
+                number_of_cmd++;
+
+                int_to_str(bin_commands[number_of_cmd], value_of_cmd);
+                strcat(disassembly->commands, value_of_cmd);
+                strcat(disassembly->commands, ":");
+                strcat(disassembly->commands, "\n");
+                // printf("%s", disassembly->commands);
                 number_of_cmd++;
 
                 break;
