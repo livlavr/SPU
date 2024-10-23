@@ -1,7 +1,7 @@
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
-enum CMDS_DISASSEMBLY //TODO big letters enum
+enum CMDS_DISASSEMBLY
 {
     DISASSEMBLY_PUSH  = 11,
     DISASSEMBLY_POP   = 22,
@@ -29,7 +29,6 @@ const char* ASSEMBLY_REG_AX = "AX";
 const char* ASSEMBLY_REG_BX = "BX";
 const char* ASSEMBLY_REG_CX = "CX";
 const char* ASSEMBLY_REG_DX = "DX";
-
 
 const size_t MAX_NUMBER_OF_CMDS      = 50;
 const size_t MAX_CMD_SIZE            = 15;

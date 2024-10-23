@@ -6,6 +6,7 @@
 #include "custom_asserts.h"
 #include "disassembly.h"
 #include "commands.h"
+#include "size_of_text.h"
 #include "stack_public.h"
 
 //TODO Static library .a
@@ -32,7 +33,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
         return FILE_OPEN_ERROR;
     }
 
-    size_of_text(filename, disassembly);
+    size_of_text(filename, &(disassembly->size_of_commands_array));
 
     size_t number_of_cmd               = 0;
     char   value_of_cmd[MAX_CMD_SIZE]  = "";
@@ -67,7 +68,6 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 number_of_cmd++;
                 process_register(ASSEMBLY_PUSH, disassembly, &number_of_cmd, bin_commands[number_of_cmd]);
                 printf("%s", disassembly->commands);
-
                 break;
 
             case DISASSEMBLY_POP:
@@ -169,22 +169,6 @@ inline void reverse_str(char* str, int length)
         str[left_char]  = str[right_char];
         str[right_char] = switcher;
     }
-}
-
-TYPE_OF_ERROR size_of_text(const char* filename, disassembly_cmd_array* disassembly)
-{
-    check_expression(filename    != NULL, POINTER_IS_NULL);
-    check_expression(disassembly != NULL, POINTER_IS_NULL);
-
-    struct stat buf = {};
-
-    int stat_value_check = stat(filename, &buf);
-
-    warning(stat_value_check != -1, STAT_ERROR);
-
-    disassembly->size_of_commands_array = (size_t)buf.st_size / sizeof(stack_elem);
-
-    return SUCCESS;
 }
 
 void process_register(const char* command, disassembly_cmd_array* disassembly, size_t* number_of_cmd, int cmd)

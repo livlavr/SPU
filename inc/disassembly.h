@@ -10,8 +10,8 @@ struct disassembly_cmd_array
 TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* disassembly);
 void          int_to_str         (int number, char* str);
 inline void   reverse_str        (char* str, int length);
-TYPE_OF_ERROR size_of_text       (const char* filename, disassembly_cmd_array* disassembly);
 TYPE_OF_ERROR output_cmds_to_asm (const char* filename, const disassembly_cmd_array* disassembly);
 void process_register(const char* command, disassembly_cmd_array* disassembly,
-                               size_t* number_of_cmd, int cmd);
+                      size_t* number_of_cmd, int cmd);
+
 #endif

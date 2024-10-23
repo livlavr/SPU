@@ -5,26 +5,31 @@
 #include "commands.h"
 #include "stack_public.h"
 #include "color_printf.h"
+#include "size_of_text.h"
 
 int main()
 {
     stack* st = NULL;
     stack_init(st, 10);
 
-    FILE* bin_file = fopen("src/spu_commands.bin", "rb");
+    stack_elem registers[5] = {};
+
+    const char* filename = "src/spu_commands.bin";
+    FILE* bin_file = fopen(filename, "rb");
 
     if (bin_file == NULL)
     {
-        color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", bin_file);
+        color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", filename);
 
         return FILE_OPEN_ERROR; //TODO I don't return enum type
     }
 
-    size_of_text(filename, assembly);
+    size_t size = 0;
+    size_of_text(filename, &size);
 
-    int commands[MAX_NUMBER_OF_CMDS] = {};
+    int commands[size] = {};
 
-    fread(commands, sizeof(stack_elem), MAX_NUMBER_OF_CMDS, bin_file);
+    fread(commands, sizeof(stack_elem), size, bin_file);
 
     fclose(bin_file);
 
@@ -47,8 +52,22 @@ int main()
 
                 break;
 
-            case DISASSEMBLY_POP:
+            case DISASSEMBLY_PUSHR:
                 ip++;
+                value_of_cmd = registers[commands[ip++]];
+
+                push(st, value_of_cmd);
+
+                printf("PUSHR\n");
+
+                break;
+
+            case DISASSEMBLY_POPR: //DISASSEMBLY POP DOESN'T NEED? think i can make it just print a value
+                ip++;
+                pop(st, &x);
+                registers[commands[ip++]] = x;
+
+                printf("POPR\n");
 
                 break;
 
