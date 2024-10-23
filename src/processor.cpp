@@ -10,7 +10,6 @@ int main()
 {
     stack* st = NULL;
     stack_init(st, 10);
-    int commands[50] = {};
 
     FILE* bin_file = fopen("src/spu_commands.bin", "rb");
 
@@ -21,16 +20,20 @@ int main()
         return FILE_OPEN_ERROR; //TODO I don't return enum type
     }
 
-    fread(commands, sizeof(stack_elem), 50, bin_file);
+    size_of_text(filename, assembly);
+
+    int commands[MAX_NUMBER_OF_CMDS] = {};
+
+    fread(commands, sizeof(stack_elem), MAX_NUMBER_OF_CMDS, bin_file);
 
     fclose(bin_file);
 
-    bool hlt_not_found = true;
-    size_t ip = 0;
-    stack_elem value_of_cmd     = 0;
+    bool hlt_not_found      = true;
+    size_t ip               = 0;
+    stack_elem value_of_cmd = 0;
     stack_elem x = 0, y = 0;
 
-    while(ip < 50 && hlt_not_found)
+    while(hlt_not_found)
     {
         switch(commands[ip])
         {
@@ -45,7 +48,6 @@ int main()
                 break;
 
             case DISASSEMBLY_POP:
-
                 ip++;
 
                 break;
@@ -95,11 +97,10 @@ int main()
 
                 exit(0);
 
-                break;
-
             default:
-                color_printf(RED_TEXT, BOLD, "Command - %d\n", commands[ip]);
-                warning(false, "Command doesn't found\n");
+                color_printf(RED_TEXT, BOLD, "Command %d doesn't found\n", commands[ip]);
+
+                warning(false, VALUE_ERROR);
         }
     }
 }

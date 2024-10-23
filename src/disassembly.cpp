@@ -44,13 +44,10 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
     fread(bin_commands, sizeof(int), disassembly->size_of_commands_array, bin_file);
 
-    printf("%d", disassembly->size_of_commands_array);
-
     fclose(bin_file);
 
     while(number_of_cmd < MAX_NUMBER_OF_CMDS && hlt_not_found)
     {
-        color_printf(YELLOW_TEXT, BOLD, "%d\n", bin_commands[number_of_cmd]);
         switch(bin_commands[number_of_cmd])
         {
             case DISASSEMBLY_PUSH:
@@ -66,11 +63,25 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
                 break;
 
+            case DISASSEMBLY_PUSHR:
+                number_of_cmd++;
+                process_register(ASSEMBLY_PUSH, disassembly, &number_of_cmd, bin_commands[number_of_cmd]);
+                printf("%s", disassembly->commands);
+
+                break;
+
             case DISASSEMBLY_POP:
                 strcat(disassembly->commands, ASSEMBLY_POP);
                 strcat(disassembly->commands, "\n");
                 printf("%s", disassembly->commands);
                 number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_POPR:
+                number_of_cmd++;
+                process_register(ASSEMBLY_POP, disassembly, &number_of_cmd, bin_commands[number_of_cmd]);
+                printf("%s", disassembly->commands);
 
                 break;
 
@@ -174,6 +185,42 @@ TYPE_OF_ERROR size_of_text(const char* filename, disassembly_cmd_array* disassem
     disassembly->size_of_commands_array = (size_t)buf.st_size / sizeof(stack_elem);
 
     return SUCCESS;
+}
+
+void process_register(const char* command, disassembly_cmd_array* disassembly, size_t* number_of_cmd, int cmd)
+{
+    strcat(disassembly->commands, command);
+    strcat(disassembly->commands, " ");
+    switch(cmd)
+    {
+        case DISASSEMBLY_REG_AX :
+            strcat(disassembly->commands, ASSEMBLY_REG_AX);
+            strcat(disassembly->commands, "\n");
+            (*number_of_cmd)++;
+
+            break;
+        case DISASSEMBLY_REG_BX :
+            strcat(disassembly->commands, ASSEMBLY_REG_BX);
+            strcat(disassembly->commands, "\n");
+            (*number_of_cmd)++;
+
+            break;
+        case DISASSEMBLY_REG_CX :
+            strcat(disassembly->commands, ASSEMBLY_REG_CX);
+            strcat(disassembly->commands, "\n");
+            (*number_of_cmd)++;
+
+            break;
+        case DISASSEMBLY_REG_DX :
+            strcat(disassembly->commands, ASSEMBLY_REG_DX);
+            strcat(disassembly->commands, "\n");
+            (*number_of_cmd)++;
+
+            break;
+        default :
+            color_printf(RED_TEXT, BOLD, "Not a register: %d\n", cmd);
+            warning(false, VALUE_ERROR);
+    }
 }
 
 TYPE_OF_ERROR output_cmds_to_asm(const char* filename, const disassembly_cmd_array* disassembly)
