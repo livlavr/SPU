@@ -51,7 +51,7 @@ int main()
                 break;
 
             case DISASSEMBLY_ADD:
-                pop(st, &y); //TODO correct highlighting
+                pop(st, &y); //TODO correct highlighting in pop
                 pop(st, &x);
                 push(st, x + y);
 

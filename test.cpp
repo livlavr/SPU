@@ -3,16 +3,18 @@
 
 int main() {
    FILE *fp;
-   const char *str = "Hello, World!";
-
-   fp = fopen("example3.txt", "w");
+   char str[10] = "";
+   int num         = 0;
+   fp = fopen("example3.txt", "r");
    if (fp == NULL) {
       perror("Error opening file");
       return 1;
    }
 
-   size_t written = fwrite(str, sizeof(char), strlen(str), fp);
-   printf("Number of elements written: %zu\n", written);
+   fscanf(fp, "%d", num);
+   printf("%d", num);
+   fscanf(fp, "%s", str);
+   printf("%s", str);
 
    fclose(fp);
    return 0;
