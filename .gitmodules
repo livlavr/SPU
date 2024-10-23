@@ -1,0 +1,9 @@
+[submodule "Stack"]
+	path = Stack
+	url = git@github.com:livlavr/Stack.git
+[submodule "Custom-asserts"]
+	path = Custom-asserts
+	url = git@github.com:livlavr/Custom-asserts.git
+[submodule "Color-printf"]
+	path = Color-printf
+	url = git@github.com:livlavr/Color-printf.git
