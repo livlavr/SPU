@@ -50,8 +50,8 @@ TYPE_OF_ERROR fill_commands(char* buffer, size_t size_of_text, char** asm_comman
     check_expression(buffer,       POINTER_IS_NULL);
     check_expression(asm_commands, POINTER_IS_NULL);
 
-    $DEBUG("%s", buffer);
-    $DEBUG("%lu", size_of_text);
+    // $DEBUG("%s", buffer);
+    // $DEBUG("%lu", size_of_text);
 
     int   number_of_cmd           = 0;
     char* current_char            = buffer;

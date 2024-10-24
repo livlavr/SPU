@@ -36,15 +36,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         return FILE_OPEN_ERROR;
     }
 
-    int    number_of_cmd         = 0;
-    int    value_of_cmd          = 0;
-    int    is_number             = 0;
-    int    number_of_compilation = 0;
-
     size_t size_of_buffer = 0;
     size_of_text(filename, &(size_of_buffer));
 
-    $DEBUG("%lu", size_of_buffer);
+    // $DEBUG("%lu", size_of_buffer);
 
     char* buffer = (char*)calloc(size_of_buffer, sizeof(char));
     warning(buffer, CALLOC_ERROR);
@@ -54,34 +49,43 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
     count_cmds(buffer, size_of_buffer, &(assembly->size_of_commands_array));
 
     char cmd[MAX_CMD_SIZE] = "";
-    char arg[MAX_CMD_SIZE] = "";
+    // char arg[MAX_CMD_SIZE] = "";
 
     char** asm_commands = (char**)calloc(assembly->size_of_commands_array, sizeof(char*));
     warning(asm_commands, CALLOC_ERROR);
 
-    $DEBUG("%lu", assembly->size_of_commands_array);
+    // $DEBUG("%lu", assembly->size_of_commands_array);
 
     fill_commands(buffer, size_of_buffer, asm_commands);
 
     assembly->commands = (int*)calloc(assembly->size_of_commands_array, sizeof(int));
     warning(assembly->commands, CALLOC_ERROR);
-//TODO Продолжить по строкам ...
-    while(number_of_cmd < assembly->size_of_commands_array * 2)
+
+    int    number_of_cmd         = 0;
+    // int    bin_number_of_cmd         = 0;
+    int    value_of_cmd          = 0;
+    int    is_number             = 0;
+    int    number_of_compilation = 0;
+
+    while(number_of_cmd < assembly->size_of_commands_array)
     {
-        scan_command(asm_file, &cmd);
+        scan_command(asm_commands[number_of_cmd], &cmd);
+        printf("%s - line\n", cmd);
         if(!strcmp(ASSEMBLY_PUSH, cmd)) // TODO strcmp == 0
         {
             printf("%s - CMD\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_PUSH;
 
-            is_number = fscanf(asm_file, "%d", &value_of_cmd);
+            is_number = sscanf(asm_commands[number_of_cmd], "%d", &value_of_cmd);
             if (is_number)
             {
                 assembly->commands[number_of_cmd++] = value_of_cmd;
+                printf("%d - VALUE\n", value_of_cmd);
             }
             else
             {
-                scan_command(asm_file, &cmd);
+                scan_command(asm_commands[number_of_cmd++], &cmd);
+                printf("%s - VALUE\n", cmd);
                 process_register(DISASSEMBLY_PUSHR, assembly, &number_of_cmd, cmd);
             }
         }
@@ -90,7 +94,7 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             printf("%s - CMD\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_POP;
 
-            is_number = fscanf(asm_file, "%d", &value_of_cmd);
+            is_number = sscanf(asm_commands[number_of_cmd], "%d", &value_of_cmd);
 
             if (is_number)
             {
@@ -98,40 +102,41 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             }
             else
             {
-                scan_command(asm_file, &cmd);
+                scan_command(asm_commands[number_of_cmd++], &cmd);
                 process_register(DISASSEMBLY_POPR, assembly, &number_of_cmd, cmd);
             }
         }
         else if(!strcmp(ASSEMBLY_ADD, cmd))
         {
-            printf("%s\n", cmd);
+            printf("%s - CMD\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_ADD;
         }
         else if(!strcmp(ASSEMBLY_SUB, cmd))
         {
-            printf("%s\n", cmd);
+            printf("%s - CMD\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_SUB;
         }
         else if(!strcmp(ASSEMBLY_DIV, cmd))
         {
-            printf("%s\n", cmd);
+            printf("%s - CMD\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_DIV;
         }
         else if(!strcmp(ASSEMBLY_MUL, cmd))
         {
-            printf("%s\n", cmd);
+            printf("%s - CMD\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_MUL;
         }
         else if(!strcmp(ASSEMBLY_OUT, cmd))
         {
-            printf("%s\n", cmd);
+            printf("%s - CMD\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_OUT;
         }
         else if(!strcmp(ASSEMBLY_JA, cmd))
         {
+            printf("%s - JMP\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JA;
 
-            scan_command(asm_file, &cmd);
+            scan_command(asm_commands[number_of_cmd], &cmd);
 
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
@@ -139,9 +144,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         else if(!strcmp(ASSEMBLY_JAE, cmd))
         {
+            printf("%s - JMP\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JAE;
 
-            scan_command(asm_file, &cmd);
+            scan_command(asm_commands[number_of_cmd], &cmd);
 
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
@@ -150,9 +156,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         else if(!strcmp(ASSEMBLY_JB, cmd))
         {
+            printf("%s - JMP\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JB;
 
-            scan_command(asm_file, &cmd);
+            scan_command(asm_commands[number_of_cmd], &cmd);
 
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
@@ -161,9 +168,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         else if(!strcmp(ASSEMBLY_JBE, cmd))
         {
+            printf("%s - JMP\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JBE;
 
-            scan_command(asm_file, &cmd);
+            scan_command(asm_commands[number_of_cmd], &cmd);
 
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
@@ -172,9 +180,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         else if(!strcmp(ASSEMBLY_JE, cmd))
         {
+            printf("%s - JMP\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JE;
 
-            scan_command(asm_file, &cmd);
+            scan_command(asm_commands[number_of_cmd], &cmd);
 
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
@@ -183,9 +192,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         else if(!strcmp(ASSEMBLY_JNE, cmd))
         {
+            printf("%s - JMP\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JNE;
 
-            scan_command(asm_file, &cmd);
+            scan_command(asm_commands[number_of_cmd], &cmd);
 
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
@@ -194,9 +204,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         else if(!strcmp(ASSEMBLY_JMP, cmd))
         {
+            printf("%s - JMP\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JMP;
 
-            scan_command(asm_file, &cmd);
+            scan_command(asm_commands[number_of_cmd], &cmd);
 
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
@@ -204,9 +215,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         else if(!strcmp(ASSEMBLY_CALL, cmd))
         {
+            printf("%s - CALL\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_CALL;
 
-            scan_command(asm_file, &cmd);
+            scan_command(asm_commands[number_of_cmd], &cmd);
 
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
@@ -214,11 +226,12 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         else if(!strcmp(ASSEMBLY_RETURN, cmd))
         {
+            printf("%s - RET\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_RETURN;
         }
         else if(!strcmp(ASSEMBLY_HLT, cmd))
         {
-            // printf("%s\n", cmd);
+            printf("%s - HLT\n", cmd);
             assembly->commands[number_of_cmd++] = DISASSEMBLY_HLT;
         }
         else if(find_elem(cmd, assembly->tags, assembly->size_of_labels_array) && number_of_compilation == 0)
@@ -231,12 +244,15 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         {
             if (number_of_compilation == 0)
             {
-                strncpy(assembly->tags[assembly->size_of_labels_array].name, cmd, MAX_CMD_SIZE); //TODO delete +1
+                printf("%s - LABEL_NAME\n", cmd);
+                strncpy(assembly->tags[assembly->size_of_labels_array].name, cmd, MAX_CMD_SIZE); //TODO MAX_CMD_SIZE
                 assembly->tags[assembly->size_of_labels_array].index_to_jmp = number_of_cmd;
                 (assembly->size_of_labels_array)++;
             }
+            number_of_cmd++;
+            return SUCCESS;
         }
-        else //TODO add line of error
+        else
         {
             color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't find \"%s\" command.\n", cmd);
             color_printf(RED_TEXT, BOLD, "Command wrong or too long, MAX_CMD_SIZE = %lu\n", MAX_CMD_SIZE);
@@ -245,12 +261,12 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         }
         if((number_of_cmd == assembly->size_of_commands_array - 1) && number_of_compilation == 0)
         {
+            printf("End of first compilation\n");
             number_of_compilation++;
             number_of_cmd          = 0;
             value_of_cmd           = 0;
             is_number              = 0;
             memset(cmd, 0, MAX_CMD_SIZE);
-            rewind(asm_file);
         }
     }
 
@@ -312,7 +328,7 @@ void process_label(assembly_cmd_array* assembly, int number_of_cmd, char cmd[])
             {
                 assembly->commands[number_of_cmd] = assembly->tags[index_of_label].index_to_jmp;
 
-                // printf("%d - index in cmd\n", assembly->commands[number_of_cmd]);
+                printf("%d - index in cmd\n", assembly->commands[number_of_cmd]);
 
                 break;
             }
