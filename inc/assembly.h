@@ -25,10 +25,5 @@ void          process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
 bool          find_elem(char* elem, labels* array, int size_of_array);
 
 #define scan_command(buffer, cmd) sscanf(buffer, "%14s", cmd)
-#define scan_command(buffer, cmd) sscanf(buffer, "%14s", cmd)
-
-#define buf_scanf(text, type_of_value, value) \
-    sscanf(const text, type_of_value, value); \
-
 
 #endif

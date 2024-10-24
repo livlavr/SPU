@@ -116,6 +116,14 @@ int main()
 
                 break;
 
+            case DISASSEMBLY_IN:
+                scanf("%d", &x);
+                push(st, x);
+
+                ip++;
+
+                break;
+
             case DISASSEMBLY_OUT: //TODO make print cmd
                 pop(st, &x);
                 color_printf(GREEN_TEXT, BOLD, "RESULT: %d\n", x);

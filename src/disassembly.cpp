@@ -8,6 +8,7 @@
 #include "commands.h"
 #include "size_of_text.h"
 #include "stack_public.h"
+#include "debug_macros.h"
 
 //TODO Static library .a
 //TODO Difference between static and dynamic libraries - read about it
@@ -35,18 +36,17 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
     size_of_text(filename, &(disassembly->size_of_commands_array)); //TODO pizdec disassembler /sizeof(stack_elem)
 
-    int  number_of_cmd               = 0;
-    int  number_of_label             = 0;
-    int  number_of_compilation       = 0;
-    char value_of_cmd[MAX_CMD_SIZE]  = "";
-    bool hlt_not_found               = true;
+    disassembly->size_of_commands_array /= sizeof(stack_elem);
 
-    int bin_commands[disassembly->size_of_commands_array] = {};
+    int  number_of_cmd                = 0;
+    int  number_of_label              = 0;
+    int  number_of_compilation        = 0;
+    char value_of_cmd[MAX_CMD_SIZE]   = "";
+    int  bin_commands[disassembly->size_of_commands_array] = {};
+    int  size_of_labels_array         = disassembly->size_of_commands_array / 2 + 1;
+    int  labels[size_of_labels_array] = {};
 
-    int size_of_labels_array = disassembly->size_of_commands_array / 2;
-    int labels[size_of_labels_array]   = {};
     fill_poison(labels, size_of_labels_array, POISON);
-    color_printf(RED_TEXT, BOLD, "%d\n", labels[1]);
 
     disassembly->commands = (char*)calloc(disassembly->size_of_commands_array * MAX_CMD_SIZE, sizeof(char));
 
@@ -54,7 +54,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
     fclose(bin_file);
 
-    while(number_of_cmd < MAX_NUMBER_OF_CMDS && hlt_not_found)
+    while(number_of_cmd < disassembly->size_of_commands_array)
     {
         if(find_elem(number_of_cmd, labels, size_of_labels_array))
         {
@@ -62,6 +62,16 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
             strcat(disassembly->commands, value_of_cmd);
             strcat(disassembly->commands, ":");
             strcat(disassembly->commands, "\n");
+        }
+        if(number_of_cmd == disassembly->size_of_commands_array - 1)
+        {
+            if(number_of_compilation == 0)
+            {
+                number_of_compilation++;
+                number_of_cmd   = 0;
+                number_of_label = 0;
+                memset(disassembly->commands, 0, disassembly->size_of_commands_array * MAX_CMD_SIZE);//TODO BAD
+            }
         }
         switch(bin_commands[number_of_cmd])
         {
@@ -71,7 +81,6 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 number_of_cmd++;
 
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
-                printf("%s - value of cmd\n", value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, "\n");
                 // printf("%s", disassembly->commands);
@@ -230,23 +239,34 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
                 break;
 
+            case DISASSEMBLY_CALL:
+                strcat(disassembly->commands, ASSEMBLY_CALL);
+                strcat(disassembly->commands, " ");
+                number_of_cmd++;
+
+                labels[number_of_label++] = bin_commands[number_of_cmd];
+                int_to_str(bin_commands[number_of_cmd], value_of_cmd);
+                strcat(disassembly->commands, value_of_cmd);
+                strcat(disassembly->commands, ":");
+                strcat(disassembly->commands, "\n");
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_RETURN:
+                strcat(disassembly->commands, ASSEMBLY_RETURN);
+                strcat(disassembly->commands, "\n");
+                number_of_cmd++;
+
+                break;
+
             case DISASSEMBLY_HLT:
                 strcat(disassembly->commands, ASSEMBLY_HLT);
                 strcat(disassembly->commands, "\n");
                 printf("%s", disassembly->commands);
                 number_of_cmd++;
 
-                if(number_of_compilation) hlt_not_found = false;
-                else
-                {
-                    number_of_compilation++;
-                    number_of_cmd   = 0;
-                    number_of_label = 0;
-                    memset(disassembly->commands, 0, disassembly->size_of_commands_array * MAX_CMD_SIZE);
-                }
-
                 break;
-
             default:
                 color_printf(RED_TEXT, BOLD, "%d\n", bin_commands[number_of_cmd]);
 

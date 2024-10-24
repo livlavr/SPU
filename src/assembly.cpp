@@ -138,6 +138,12 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             assembly->commands[number_of_cmd++] = DISASSEMBLY_MUL;
             asm_commands++;
         }
+        else if(!strcmp(ASSEMBLY_IN, cmd))
+        {
+            printf("%s - CMD\n", cmd);
+            assembly->commands[number_of_cmd++] = DISASSEMBLY_IN;
+            asm_commands++;
+        }
         else if(!strcmp(ASSEMBLY_OUT, cmd))
         {
             printf("%s - CMD\n", cmd);

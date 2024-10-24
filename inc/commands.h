@@ -11,6 +11,7 @@ enum CMDS_DISASSEMBLY
     DISASSEMBLY_DIV    = 60,
     DISASSEMBLY_OUT    = 70,
     DISASSEMBLY_MUL    = 80,
+    DISASSEMBLY_IN     = 90,
     DISASSEMBLY_PUSHR  = 100,
     DISASSEMBLY_POPR   = 200,
     DISASSEMBLY_JA     = 1000,
@@ -34,6 +35,7 @@ const char* ASSEMBLY_ADD    = "ADD" ;
 const char* ASSEMBLY_SUB    = "SUB" ;
 const char* ASSEMBLY_DIV    = "DIV" ;
 const char* ASSEMBLY_OUT    = "OUT" ;
+const char* ASSEMBLY_IN     = "IN"  ;
 const char* ASSEMBLY_MUL    = "MUL" ;
 const char* ASSEMBLY_HLT    = "HLT" ;
 const char* ASSEMBLY_REG_AX = "AX"  ;
