@@ -4,6 +4,12 @@ CALL SUM:
 OUT
 HLT
 
+TIMES:
+    MUL
+RETURN
+
 SUM:
     ADD
+    PUSH 30
+    CALL TIMES:
 RETURN
