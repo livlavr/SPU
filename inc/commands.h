@@ -19,6 +19,9 @@ enum CMDS_DISASSEMBLY
     DISASSEMBLY_JBE    = 4000,
     DISASSEMBLY_JE     = 5000,
     DISASSEMBLY_JNE    = 6000,
+    DISASSEMBLY_JMP    = 7000,
+    DISASSEMBLY_CALL   = 8000,
+    DISASSEMBLY_RETURN = 9000,
     DISASSEMBLY_REG_AX = 1,
     DISASSEMBLY_REG_BX = 2,
     DISASSEMBLY_REG_CX = 3,
@@ -43,6 +46,10 @@ const char* ASSEMBLY_JB     = "JB"  ;
 const char* ASSEMBLY_JBE    = "JBE" ;
 const char* ASSEMBLY_JE     = "JE"  ;
 const char* ASSEMBLY_JNE    = "JNE" ;
+const char* ASSEMBLY_JMP    = "JMP" ;
+const char* ASSEMBLY_CALL   = "CALL";
+const char* ASSEMBLY_RETURN = "RETURN";
+
 
 const size_t MAX_NUMBER_OF_CMDS      = 50;
 const size_t MAX_CMD_SIZE            = 15;

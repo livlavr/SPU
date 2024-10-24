@@ -22,7 +22,7 @@ int main()
     return 0;
 }
 
-TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* disassembly) //TODO check values for valid?
+TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* disassembly)
 {
     FILE* bin_file = fopen(filename, "rb");
 
@@ -33,13 +33,20 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
         return FILE_OPEN_ERROR;
     }
 
-    size_of_text(filename, &(disassembly->size_of_commands_array));
+    size_of_text(filename, &(disassembly->size_of_commands_array)); //TODO pizdec disassembler /sizeof(stack_elem)
 
-    size_t number_of_cmd               = 0;
-    char   value_of_cmd[MAX_CMD_SIZE]  = "";
-    bool   hlt_not_found               = true;
+    int  number_of_cmd               = 0;
+    int  number_of_label             = 0;
+    int  number_of_compilation       = 0;
+    char value_of_cmd[MAX_CMD_SIZE]  = "";
+    bool hlt_not_found               = true;
 
     int bin_commands[disassembly->size_of_commands_array] = {};
+
+    int size_of_labels_array = disassembly->size_of_commands_array / 2;
+    int labels[size_of_labels_array]   = {};
+    fill_poison(labels, size_of_labels_array, POISON);
+    color_printf(RED_TEXT, BOLD, "%d\n", labels[1]);
 
     disassembly->commands = (char*)calloc(disassembly->size_of_commands_array * MAX_CMD_SIZE, sizeof(char));
 
@@ -49,6 +56,13 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
     while(number_of_cmd < MAX_NUMBER_OF_CMDS && hlt_not_found)
     {
+        if(find_elem(number_of_cmd, labels, size_of_labels_array))
+        {
+            int_to_str(number_of_cmd, value_of_cmd);
+            strcat(disassembly->commands, value_of_cmd);
+            strcat(disassembly->commands, ":");
+            strcat(disassembly->commands, "\n");
+        }
         switch(bin_commands[number_of_cmd])
         {
             case DISASSEMBLY_PUSH:
@@ -57,6 +71,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 number_of_cmd++;
 
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
+                printf("%s - value of cmd\n", value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, "\n");
                 // printf("%s", disassembly->commands);
@@ -130,6 +145,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 strcat(disassembly->commands, " ");
                 number_of_cmd++;
 
+                labels[number_of_label++] = bin_commands[number_of_cmd];
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, ":");
@@ -144,6 +160,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 strcat(disassembly->commands, " ");
                 number_of_cmd++;
 
+                labels[number_of_label++] = bin_commands[number_of_cmd];
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, ":");
@@ -158,6 +175,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 strcat(disassembly->commands, " ");
                 number_of_cmd++;
 
+                labels[number_of_label++] = bin_commands[number_of_cmd];
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, ":");
@@ -172,6 +190,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 strcat(disassembly->commands, " ");
                 number_of_cmd++;
 
+                labels[number_of_label++] = bin_commands[number_of_cmd];
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, ":");
@@ -186,6 +205,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 strcat(disassembly->commands, " ");
                 number_of_cmd++;
 
+                labels[number_of_label++] = bin_commands[number_of_cmd];
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, ":");
@@ -200,6 +220,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 strcat(disassembly->commands, " ");
                 number_of_cmd++;
 
+                labels[number_of_label++] = bin_commands[number_of_cmd];
                 int_to_str(bin_commands[number_of_cmd], value_of_cmd);
                 strcat(disassembly->commands, value_of_cmd);
                 strcat(disassembly->commands, ":");
@@ -215,7 +236,14 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
                 printf("%s", disassembly->commands);
                 number_of_cmd++;
 
-                hlt_not_found = false;
+                if(number_of_compilation) hlt_not_found = false;
+                else
+                {
+                    number_of_compilation++;
+                    number_of_cmd   = 0;
+                    number_of_label = 0;
+                    memset(disassembly->commands, 0, disassembly->size_of_commands_array * MAX_CMD_SIZE);
+                }
 
                 break;
 
@@ -229,18 +257,51 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
     return SUCCESS;
 }
 
-void int_to_str(int number, char* str)
+bool find_elem(int number, int* array, int size_of_array)
 {
+    for(int index = 0; index < size_of_array; index++)
+    {
+        if(number == array[index])
+        {
+            return true;
+
+            break;
+        }
+    }
+    return false;
+}
+
+TYPE_OF_ERROR fill_poison(int* array, int size, int poison)
+{
+    check_expression(array, POINTER_IS_NULL);
+
+    for(int index = 0; index < size; index ++)
+    {
+        array[index] = poison;
+    }
+
+    return SUCCESS;
+}
+
+TYPE_OF_ERROR int_to_str(int number, char* str)
+{
+    check_expression(str, POINTER_IS_NULL);
+
     int number_of_char = 0;
-    int sign = number;
+    int sign           = number;
 
+    if (number == 0)
+    {
+        str[number_of_char++]   = '0';
+    }
     if (number < 0)
+    {
         number = -number;
-
+    }
     while (number > 0)
     {
         str[number_of_char++] = number % 10 + '0';
-      	number /= 10;
+      	number               /= 10;
     }
 
     if (sign < 0)
@@ -251,6 +312,8 @@ void int_to_str(int number, char* str)
     str[number_of_char] = '\0';
 
     reverse_str(str, number_of_char);
+
+    return SUCCESS;
 }
 
 inline void reverse_str(char* str, int length)
@@ -263,8 +326,11 @@ inline void reverse_str(char* str, int length)
     }
 }
 
-void process_register(const char* command, disassembly_cmd_array* disassembly, size_t* number_of_cmd, int cmd)
+TYPE_OF_ERROR process_register(const char* command, disassembly_cmd_array* disassembly, int* number_of_cmd, int cmd)
 {
+    check_expression(disassembly,   POINTER_IS_NULL);
+    check_expression(number_of_cmd, POINTER_IS_NULL);
+
     strcat(disassembly->commands, command);
     strcat(disassembly->commands, " ");
     switch(cmd)
@@ -297,6 +363,8 @@ void process_register(const char* command, disassembly_cmd_array* disassembly, s
             color_printf(RED_TEXT, BOLD, "Not a register: %d\n", cmd);
             warning(false, VALUE_ERROR);
     }
+
+    return SUCCESS;
 }
 
 TYPE_OF_ERROR output_cmds_to_asm(const char* filename, const disassembly_cmd_array* disassembly)

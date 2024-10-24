@@ -6,7 +6,7 @@ const int POISON_INDEX = -1;
 struct labels
 {
     char   name[MAX_CMD_SIZE + 1] = "";
-    int index_to_jmp              = POISON_INDEX;
+    int    index_to_jmp           = POISON_INDEX;
 };
 
 struct assembly_cmd_array
@@ -22,5 +22,12 @@ TYPE_OF_ERROR output_cmds_to_bin (const char* filename, const assembly_cmd_array
 void          process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* assembly,
                                int* number_of_cmd, char* cmd);
 void          process_label(assembly_cmd_array* assembly, int number_of_cmd, char cmd[]);
+bool          find_elem(char* elem, labels* array, int size_of_array);
+
+#define scan_command(file, cmd) fscanf(file, "%15s", cmd)
+
+#define buf_scanf(text, type_of_value, value) \
+    sscanf(const text, type_of_value, value); \
+
 
 #endif

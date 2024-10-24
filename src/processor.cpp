@@ -10,7 +10,10 @@
 int main()
 {
     stack* st = NULL;
-    stack_init(st, 10);
+    stack_init(st, 15);
+
+    stack* functions_return_codes = NULL;
+    stack_init(functions_return_codes, 5);
 
     stack_elem registers[NUMBER_OF_REGISTERS] = {};
 
@@ -220,6 +223,25 @@ int main()
                     ip++;
                     ip++;
                 }
+
+                break;
+
+            case DISASSEMBLY_JMP:
+                ip++;
+                ip = commands[ip];
+
+                break;
+
+            case DISASSEMBLY_CALL:
+                ip++;
+                push(functions_return_codes, ip + 1);
+                ip = commands[ip];
+
+                break;
+
+            case DISASSEMBLY_RETURN:
+                pop(functions_return_codes, &x);
+                ip = x;
 
                 break;
 

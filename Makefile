@@ -49,7 +49,7 @@ all   :
 	clear
 	make quick_assembly
 	make processor
-	@printf "$(GREEN_TEXT)$(TARGET) COMPILED$(DEFAULT_TEXT)\n"
+	@printf "$(GREEN_TEXT)$(TARGET) COMPILED $(DEFAULT_TEXT)\n"
 	$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
 $(TARGET) :  $(BUILD_DIR) $(OBJECT)
