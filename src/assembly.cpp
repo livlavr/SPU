@@ -36,8 +36,13 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         return FILE_OPEN_ERROR;
     }
 
+    int    number_of_cmd         = 0;
+    int    value_of_cmd          = 0;
+    int    is_number             = 0;
+    int    number_of_compilation = 0;
+
     size_t size_of_buffer = 0;
-    size_of_text(filename, &size_of_buffer);
+    size_of_text(filename, &(size_of_buffer));
 
     $DEBUG("%lu", size_of_buffer);
 
@@ -46,22 +51,23 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
 
     fread(buffer, sizeof(char), size_of_buffer, asm_file);
 
-    count_lines(buffer, size_of_buffer, &(assembly->size_of_commands_array));
+    count_cmds(buffer, size_of_buffer, &(assembly->size_of_commands_array));
+
+    char cmd[MAX_CMD_SIZE] = "";
+    char arg[MAX_CMD_SIZE] = "";
+
+    char** asm_commands = (char**)calloc(assembly->size_of_commands_array, sizeof(char*));
+    warning(asm_commands, CALLOC_ERROR);
 
     $DEBUG("%lu", assembly->size_of_commands_array);
 
-    assembly->commands = (int*)calloc(assembly->size_of_commands_array * 2, sizeof(int));
+    fill_commands(buffer, size_of_buffer, asm_commands);
+
+    assembly->commands = (int*)calloc(assembly->size_of_commands_array, sizeof(int));
     warning(assembly->commands, CALLOC_ERROR);
-
-    int    number_of_cmd         = 0;
-    int    value_of_cmd          = 0;
-    int    is_number             = 0;
-    int    number_of_compilation = 0;
-    char   cmd[MAX_CMD_SIZE + 1] = ""; //+1 for \0 symbol // TODO remove + 1
-
-    while(number_of_cmd < assembly->size_of_commands_array)
+//TODO Продолжить по строкам ...
+    while(number_of_cmd < assembly->size_of_commands_array * 2)
     {
-        // TODO use onegin as library
         scan_command(asm_file, &cmd);
         if(!strcmp(ASSEMBLY_PUSH, cmd)) // TODO strcmp == 0
         {
@@ -225,7 +231,7 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         {
             if (number_of_compilation == 0)
             {
-                strncpy(assembly->tags[assembly->size_of_labels_array].name, cmd, MAX_CMD_SIZE + 1); //TODO delete +1
+                strncpy(assembly->tags[assembly->size_of_labels_array].name, cmd, MAX_CMD_SIZE); //TODO delete +1
                 assembly->tags[assembly->size_of_labels_array].index_to_jmp = number_of_cmd;
                 (assembly->size_of_labels_array)++;
             }
@@ -243,7 +249,7 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             number_of_cmd          = 0;
             value_of_cmd           = 0;
             is_number              = 0;
-            memset(cmd, 0, MAX_CMD_SIZE + 1);
+            memset(cmd, 0, MAX_CMD_SIZE);
             rewind(asm_file);
         }
     }
