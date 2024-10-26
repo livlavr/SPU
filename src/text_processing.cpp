@@ -57,7 +57,6 @@ TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
 
 TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_filename, char** output_filename)
 {
-    $DEBUG("%s", argv[number_of_flag]);
     if(strcmp(argv[number_of_flag], "--input") == 0)
     {
         size_t size_of_filename = sizeof(argv[number_of_flag + 1]) / sizeof(char);
@@ -66,7 +65,6 @@ TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_file
         warning(*input_filename, CALLOC_ERROR);
 
         strcpy(*input_filename, argv[number_of_flag + 1]);
-        $DEBUG("%s", argv[number_of_flag + 1]);
     }
     else if(strcmp(argv[number_of_flag], "--output") == 0)
     {
@@ -141,7 +139,6 @@ TYPE_OF_ERROR fill_commands(char* buffer, size_t size_of_text, char** asm_comman
     int   number_of_cmd           = 0;
     char* current_char            = buffer;
     asm_commands[number_of_cmd++] = buffer;
-    $DEBUG("%c", asm_commands[number_of_cmd - 1][0]);
     current_char++;
 
     while(current_char < buffer + size_of_text - 1)
@@ -152,8 +149,6 @@ TYPE_OF_ERROR fill_commands(char* buffer, size_t size_of_text, char** asm_comman
             if(*(current_char + 1) != '\n' && *(current_char + 1) != ' ' && *(current_char + 1) != '\t')
             {
                 asm_commands[number_of_cmd++] = current_char + 1;
-
-                $DEBUG("%c", asm_commands[number_of_cmd - 1][0]);
             }
         }
         current_char++;

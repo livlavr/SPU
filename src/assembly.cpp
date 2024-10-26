@@ -20,8 +20,6 @@ int main(int argc, char** argv)
     char* input_filename              = NULL;
     char* output_filename             = NULL;
     catch_filenames(argc, argv, &input_filename, &output_filename);
-    $DEBUG("%s", input_filename);
-    $DEBUG("%s", output_filename);
     fill_bin_cmds_array(input_filename,  &assembly);
     output_cmds_to_bin (output_filename, &assembly);//TODO add to consts
 

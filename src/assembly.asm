@@ -1,13 +1,13 @@
 IN
 IN
-CALL 10:
+CALL 8:
 OUT
 HLT
-8:
+6:
 MUL
 RETURN
-10:
-    ADD
-    PUSH 30
-    CALL 8:
+8:
+ADD
+PUSH 30
+CALL 6:
 RETURN

@@ -6,7 +6,7 @@
 #include "custom_asserts.h"
 #include "disassembly.h"
 #include "commands.h"
-#include "size_of_text.h"
+#include "text_processing.h"
 #include "stack_public.h"
 #include "debug_macros.h"
 
@@ -14,11 +14,14 @@
 //TODO Difference between static and dynamic libraries - read about it
 //TODO How to make good submodule .h
 
-int main()
+int main(int argc, char** argv)
 {
     disassembly_cmd_array disassembly = {};
-    fill_asm_cmds_array("src/spu_commands.bin", &disassembly);
-    output_cmds_to_asm ("src/assembly.asm",     &disassembly);
+    char* input_filename              = NULL;
+    char* output_filename             = NULL;
+    catch_filenames(argc, argv, &input_filename, &output_filename);
+    fill_asm_cmds_array(input_filename,  &disassembly);
+    output_cmds_to_asm (output_filename, &disassembly);
 
     return 0;
 }
@@ -143,6 +146,14 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
             case DISASSEMBLY_OUT:
                 strcat(disassembly->commands, ASSEMBLY_OUT);
+                strcat(disassembly->commands, "\n");
+                // printf("%s", disassembly->commands);
+                number_of_cmd++;
+
+                break;
+
+            case DISASSEMBLY_IN:
+                strcat(disassembly->commands, ASSEMBLY_IN);
                 strcat(disassembly->commands, "\n");
                 // printf("%s", disassembly->commands);
                 number_of_cmd++;
