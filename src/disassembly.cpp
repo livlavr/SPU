@@ -18,7 +18,7 @@ int main()
 {
     disassembly_cmd_array disassembly = {};
     fill_asm_cmds_array("src/spu_commands.bin", &disassembly);
-    output_cmds_to_asm ("src/assembly.asm"    , &disassembly);
+    output_cmds_to_asm ("src/assembly.asm",     &disassembly);
 
     return 0;
 }

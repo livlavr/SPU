@@ -2,13 +2,13 @@ CXX                = gcc-14
 
 STACK_SRC          = stack.cpp recalloc.cpp stack_dump.cpp stack_public.cpp stack_security.cpp
 
-ASSEMBLY_SRC       = assembly.cpp size_of_text.cpp
+ASSEMBLY_SRC       = assembly.cpp text_processing.cpp
 ASSEMBLY_TARGET    = assembly
 
-DISASSEMBLY_SRC    = disassembly.cpp size_of_text.cpp
+DISASSEMBLY_SRC    = disassembly.cpp text_processing.cpp
 DISASSEMBLY_TARGET = disassembly
 
-PROCESSOR_SRC      = processor.cpp size_of_text.cpp
+PROCESSOR_SRC      = processor.cpp text_processing.cpp
 PROCESSOR_TARGET   = processor
 
 SUBMODULE_SRC      = Custom-asserts/Color/color_printf.cpp #TODO stack compiling

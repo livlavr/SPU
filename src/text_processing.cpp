@@ -1,10 +1,31 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <cstdlib>
+#include <string.h>
 
 #include "custom_asserts.h"
 #include "stack_public.h"
 #include "debug_macros.h"
+#include "text_processing.h"
+
+TYPE_OF_ERROR catch_filename(int argc, char** argv, char** input_filename,
+                             char** output_filename, const char* source_filename)
+{
+    int wrong_input_flag = 0;
+
+    if(argc >= 3 && argc <= 5)
+    {
+        process_flag(1);
+
+        process_flag(3);
+    }
+    else
+    {
+        set_default(source_filename);
+    }
+
+    return SUCCESS;
+}
 
 TYPE_OF_ERROR size_of_text(const char* filename, size_t* size_of_buffer)
 {
