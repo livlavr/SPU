@@ -5,7 +5,7 @@
 #include "commands.h"
 #include "stack_public.h"
 #include "color_printf.h"
-#include "size_of_text.h"
+#include "text_processing.h"
 
 int main(int argc, char** argv)
 {
@@ -17,26 +17,21 @@ int main(int argc, char** argv)
 
     stack_elem registers[NUMBER_OF_REGISTERS] = {};
 
-    if(argc == 1)
-    {
-        const char* filename = "src/spu_commands.bin";
-    }
-    else
-    {
-        const char* filename = const argv[1];
-    }
+    char* input_filename = NULL;
 
-    FILE* bin_file = fopen(filename, "rb");
+    catch_processor_flags(argc, argv, &input_filename);
+
+    FILE* bin_file = fopen(input_filename, "rb");
 
     if (bin_file == NULL)
     {
-        color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", filename);
+        color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", input_filename);
 
         return FILE_OPEN_ERROR; //TODO I don't return enum type
     }
 
     size_t size = 0;
-    size_of_text(filename, &size);
+    size_of_text(input_filename, &size);
 
     int commands[size] = {};
 

@@ -8,21 +8,85 @@
 #include "debug_macros.h"
 #include "text_processing.h"
 
-TYPE_OF_ERROR catch_filename(int argc, char** argv, char** input_filename,
+TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
                              char** output_filename, const char* source_filename)
 {
-    int wrong_input_flag = 0;
-
-    if(argc >= 3 && argc <= 5)
+    if(argc == 3)
     {
-        process_flag(1);
+        process_flag(1, argv, input_filename, output_filename);
+    }
+    else if(argc == 5)
+    {
+        process_flag(1, argv, input_filename, output_filename);
+        process_flag(3, argv, input_filename, output_filename);
+    }
 
-        process_flag(3);
+    if(strcmp(source_filename, "src/assembly.cpp") == 0)
+    {
+        if(*input_filename == NULL)
+        {
+            set_default_filename(input_filename, "src/assembly.asm");
+        }
+        if(*output_filename == NULL)
+        {
+            set_default_filename(output_filename, "src/spu_commands.bin");
+        }
+    }
+    else if(strcmp(source_filename, "src/processor.cpp") == 0)
+    {
+        if(*input_filename == NULL)
+        {
+            set_default_filename(input_filename, "src/spu_commands.bin");
+        }
     }
     else
     {
-        set_default(source_filename);
+        if(*input_filename == NULL)
+        {
+            set_default_filename(input_filename, "src/spu_commands.bin");
+        }
+        if(*output_filename == NULL)
+        {
+            set_default_filename(output_filename, "src/assembly.asm");
+        }
     }
+
+
+    return SUCCESS;
+}
+
+TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_filename, char** output_filename)
+{
+    $DEBUG("%s", argv[number_of_flag]);
+    if(strcmp(argv[number_of_flag], "--input") == 0)
+    {
+        size_t size_of_filename = sizeof(argv[number_of_flag + 1]) / sizeof(char);
+        *input_filename = (char*)calloc(size_of_filename, sizeof(char));
+
+        warning(*input_filename, CALLOC_ERROR);
+
+        strcpy(*input_filename, argv[number_of_flag + 1]);
+        $DEBUG("%s", argv[number_of_flag + 1]);
+    }
+    else if(strcmp(argv[number_of_flag], "--output") == 0)
+    {
+        size_t size_of_filename = sizeof(argv[number_of_flag + 1]) / sizeof(char);
+        *output_filename = (char*)calloc(size_of_filename, sizeof(char));
+
+        warning(*output_filename, CALLOC_ERROR);
+
+        strcpy(*output_filename, argv[number_of_flag + 1]);
+    }
+
+    return SUCCESS;
+}
+
+TYPE_OF_ERROR set_default_filename(char** filename, const char* source_filename)
+{
+    size_t size_of_filename = sizeof(source_filename) / sizeof(char);
+    *filename = (char*)calloc(size_of_filename, sizeof(char));
+    warning(*filename, CALLOC_ERROR);
+    strcpy(*filename, source_filename);
 
     return SUCCESS;
 }
