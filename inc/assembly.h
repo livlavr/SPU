@@ -23,6 +23,7 @@ void          process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* ass
                                int* number_of_cmd, char* cmd);
 void          process_label(assembly_cmd_array* assembly, int number_of_cmd, char cmd[]);
 bool          find_elem(char* elem, labels* array, int size_of_array);
+TYPE_OF_ERROR catch_filename(int argc, char** argv, char* filename);
 
 #define scan_command(buffer, cmd) sscanf(buffer, "%14s", cmd)
 

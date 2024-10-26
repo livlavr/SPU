@@ -14,13 +14,44 @@
 //TODO Difference between static and dynamic libraries - read about it
 //TODO How to make good submodule .h
 
-int main()
+int main(int argc, char** argv)
 {
     assembly_cmd_array assembly = {};
-    fill_bin_cmds_array("src/assembly.asm"    , &assembly);
-    output_cmds_to_bin ("src/spu_commands.bin", &assembly);
+    char* filename = NULL;
+    catch_filename(argc, argv, filename);
+    $DEBUG("%s", filename);
+    fill_bin_cmds_array(filename,               &assembly);
+    output_cmds_to_bin ("src/spu_commands.bin", &assembly);//TODO add to consts
 
     return 0;
+}
+
+TYPE_OF_ERROR catch_filename(int argc, char** argv, char* filename)
+{
+    if(argc > 1)
+    {
+        size_t size_of_filename = sizeof(argv[1]) / sizeof(char);
+        filename = (char*)calloc(size_of_filename, sizeof(char));
+
+        warning(filename, CALLOC_ERROR);
+
+        strcpy(filename, argv[1]);
+        $DEBUG("%s", filename);
+
+    }
+    else
+    {
+        size_t size_of_filename = sizeof("src/assembly.asm") / sizeof(char);
+        filename = (char*)calloc(size_of_filename, sizeof(char));
+
+        warning(filename, CALLOC_ERROR);
+
+        strcpy(filename, "src/assembly.asm");
+        $DEBUG("%s", filename);
+
+    }
+
+    return SUCCESS;
 }
 
 TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* assembly)

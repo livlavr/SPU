@@ -7,7 +7,7 @@
 #include "color_printf.h"
 #include "size_of_text.h"
 
-int main()
+int main(int argc, char** argv)
 {
     stack* st = NULL;
     stack_init(st, 15);
@@ -17,7 +17,15 @@ int main()
 
     stack_elem registers[NUMBER_OF_REGISTERS] = {};
 
-    const char* filename = "src/spu_commands.bin";
+    if(argc == 1)
+    {
+        const char* filename = "src/spu_commands.bin";
+    }
+    else
+    {
+        const char* filename = const argv[1];
+    }
+
     FILE* bin_file = fopen(filename, "rb");
 
     if (bin_file == NULL)
