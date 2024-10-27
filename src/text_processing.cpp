@@ -66,7 +66,7 @@ TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_file
 
         strcpy(*input_filename, argv[number_of_flag + 1]);
     }
-    else if(strcmp(argv[number_of_flag], "--output") == 0)
+    else if(strcmp(argv[number_of_flag], "--output") == 0) //Consts
     {
         size_t size_of_filename = sizeof(argv[number_of_flag + 1]) / sizeof(char);
         *output_filename = (char*)calloc(size_of_filename, sizeof(char));

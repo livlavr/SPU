@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     char* output_filename             = NULL;
     catch_filenames(argc, argv, &input_filename, &output_filename);
     fill_bin_cmds_array(input_filename,  &assembly);
-    output_cmds_to_bin (output_filename, &assembly);//TODO add to consts
+    output_cmds_to_bin (output_filename, &assembly);
 
     return 0;
 }
@@ -103,11 +103,11 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             asm_commands++;
 
             is_number = sscanf(*asm_commands, "%d", &value_of_cmd);
-
             if (is_number)
             {
-                assembly->commands[number_of_cmd++] = value_of_cmd;
-                asm_commands++;
+                color_printf(RED_TEXT, BOLD, "Syntax error in assembly: you can't POP in digit: < %d >\n", value_of_cmd);
+
+                warning(false, VALUE_ERROR);
             }
             else
             {
