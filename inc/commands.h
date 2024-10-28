@@ -3,36 +3,35 @@
 
 enum CMDS_DISASSEMBLY
 {
-    DISASSEMBLY_HLT    =  1 << 3,
-    DISASSEMBLY_PUSH   =  2 << 3,
-    DISASSEMBLY_POP    =  3 << 3,
-    DISASSEMBLY_ADD    =  4 << 3,
-    DISASSEMBLY_SUB    =  5 << 3,
-    DISASSEMBLY_DIV    =  6 << 3,
-    DISASSEMBLY_OUT    =  7 << 3,
-    DISASSEMBLY_MUL    =  8 << 3,
-    DISASSEMBLY_IN     =  9 << 3,
-    DISASSEMBLY_PUSHR  = 10 << 3,
-    DISASSEMBLY_POPR   = 11 << 3,
-    DISASSEMBLY_JA     = 12 << 3,
-    DISASSEMBLY_JAE    = 13 << 3,
-    DISASSEMBLY_JB     = 14 << 3,
-    DISASSEMBLY_JBE    = 15 << 3,
-    DISASSEMBLY_JE     = 16 << 3,
-    DISASSEMBLY_JNE    = 17 << 3,
-    DISASSEMBLY_JMP    = 18 << 3,
-    DISASSEMBLY_CALL   = 19 << 3,
-    DISASSEMBLY_RETURN = 20 << 3,
-    DISASSEMBLY_REG_AX = 21 << 3,
-    DISASSEMBLY_REG_BX = 22 << 3,
-    DISASSEMBLY_REG_CX = 23 << 3,
-    DISASSEMBLY_REG_DX = 24 << 3
+    DISASSEMBLY_HLT    =  1 << 3, // 8
+    DISASSEMBLY_PUSH   =  2 << 3, // 16 + {1, 2, ..., 7}
+    DISASSEMBLY_POP    =  3 << 3, // 24
+    DISASSEMBLY_ADD    =  4 << 3, // 32
+    DISASSEMBLY_SUB    =  5 << 3, // 40
+    DISASSEMBLY_DIV    =  6 << 3, // 48
+    DISASSEMBLY_OUT    =  7 << 3, // 56
+    DISASSEMBLY_MUL    =  8 << 3, // 64
+    DISASSEMBLY_IN     =  9 << 3, // 72
+    DISASSEMBLY_PUSHR  = 10 << 3, // 80     //TODO delete
+    DISASSEMBLY_POPR   = 11 << 3, // 88     //TODO delete
+    DISASSEMBLY_JA     = 12 << 3, // 96
+    DISASSEMBLY_JAE    = 13 << 3, // 104
+    DISASSEMBLY_JB     = 14 << 3, // 112
+    DISASSEMBLY_JBE    = 15 << 3, // 120
+    DISASSEMBLY_JE     = 16 << 3, // 128
+    DISASSEMBLY_JNE    = 17 << 3, // 136
+    DISASSEMBLY_JMP    = 18 << 3, // 144
+    DISASSEMBLY_CALL   = 19 << 3, // 152 //Why argument is one byte
+    DISASSEMBLY_RETURN = 20 << 3, // 160
+    DISASSEMBLY_REG_AX = 21 << 3, // 168
+    DISASSEMBLY_REG_BX = 22 << 3, // 176
+    DISASSEMBLY_REG_CX = 23 << 3, // 184
+    DISASSEMBLY_REG_DX = 24 << 3  // 192
 };
 
-enum TYPE_OF_ARGUMENT
+enum TYPE_OF_ARGUMENT // 00000MIR
 {
     RAM                   = 1 << 2,
-    REGISTERS_MEMORY      = 0 << 2,
     CONSTANT              = 1 << 1,
     REGISTER              = 1 << 0
 };

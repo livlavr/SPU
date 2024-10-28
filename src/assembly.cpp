@@ -20,6 +20,8 @@ int main(int argc, char** argv)
     char* input_filename        = NULL;
     char* output_filename       = NULL;
     catch_filenames(argc, argv, &input_filename, &output_filename);
+    printf("%s\n", input_filename);
+    // printf("%s", output_filename);
     fill_bin_cmds_array_bytes(input_filename,  &assembly);
     output_cmds_to_bin (output_filename, &assembly);
 
@@ -36,7 +38,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     {
         color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", filename);
 
-        return FILE_OPEN_ERROR;
+        warning(false, FILE_OPEN_ERROR);
     }
 
     size_t size_of_buffer = 0;
@@ -131,7 +133,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd++;
+            number_of_cmd += sizeof(int);
         }
         else if(!strcmp(ASSEMBLY_JAE, cmd))
         {
@@ -144,7 +146,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd++;
+            number_of_cmd += sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JB, cmd))
@@ -158,7 +160,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd++;
+            number_of_cmd += sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JBE, cmd))
@@ -172,7 +174,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd++;
+            number_of_cmd += sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JE, cmd))
@@ -186,7 +188,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd++;
+            number_of_cmd += sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JNE, cmd))
@@ -200,7 +202,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd++;
+            number_of_cmd += sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JMP, cmd))
@@ -214,7 +216,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd++;
+            number_of_cmd += sizeof(int);
         }
         else if(!strcmp(ASSEMBLY_CALL, cmd))
         {
@@ -227,7 +229,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd++;
+            number_of_cmd += sizeof(int);
         }
         else if(!strcmp(ASSEMBLY_RETURN, cmd))
         {
@@ -297,11 +299,12 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
     int  int_value            = 0;
 
     assembly->commands[(*number_of_cmd)] |= disassembly_cmd;
-    asm_commands++;
+    (*asm_commands)++;
 
     if((**asm_commands)[0] == '[')
     {
         assembly->commands[(*number_of_cmd)] |= RAM;
+        return SUCCESS;
         if(sscanf(**asm_commands, "[%s + %d]", register_value, &int_value) == 2)
         {
             assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
@@ -411,6 +414,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         }
         else if(sscanf(**asm_commands, "%d", &int_value) == 1)
         {
+            // printf("HUI\n");
             assembly->commands[(*number_of_cmd)] |= CONSTANT;
             (*number_of_cmd)++;
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
@@ -436,7 +440,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
     }
 
     (*number_of_cmd) += sizeof(int);
-    asm_commands++;
+    (*asm_commands)++;
 
     return SUCCESS;
 }
@@ -501,8 +505,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
         {
             if (!strcmp(cmd, assembly->tags[index_of_label].name))
             {
-                assembly->commands[number_of_cmd] = assembly->tags[index_of_label].index_to_jmp;
-
+                memcpy(&(assembly->commands[number_of_cmd]), &(assembly->tags[index_of_label].index_to_jmp), sizeof(int));
                 printf("%d - index in cmd\n", assembly->commands[number_of_cmd]);
 
                 break;

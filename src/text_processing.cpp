@@ -82,8 +82,10 @@ TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_file
 TYPE_OF_ERROR set_default_filename(char** filename, const char* source_filename)
 {
     size_t size_of_filename = sizeof(source_filename) / sizeof(char);
-    *filename = (char*)calloc(size_of_filename, sizeof(char));
+    *filename = (char*)calloc(size_of_filename + 1, sizeof(char));
+    //TODO wtf strange error
     warning(*filename, CALLOC_ERROR);
+    // printf("HUI\n"); //TODO debug
     strcpy(*filename, source_filename);
 
     return SUCCESS;
