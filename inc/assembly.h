@@ -19,10 +19,12 @@ struct assembly_cmd_array
 
 TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array* assembly);
 TYPE_OF_ERROR output_cmds_to_bin (const char* filename, const assembly_cmd_array* assembly);
-void          process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* assembly,
+TYPE_OF_ERROR process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* assembly,
                                int* number_of_cmd, char* cmd);
-void          process_label(assembly_cmd_array* assembly, int number_of_cmd, char* cmd);
+TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, char* cmd);
 bool          find_elem(char* elem, labels* array, int size_of_array);
+TYPE_OF_ERROR create_cmd_description(char* asm_cmd_argument, char* cmd, TYPE_OF_ARGUMENT memory,
+                                     TYPE_OF_ARGUMENT type_of_argument);
 
 #define scan_command(buffer, cmd) sscanf(buffer, "%14s", cmd)
 

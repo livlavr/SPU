@@ -31,7 +31,10 @@ enum CMDS_DISASSEMBLY
 
 enum TYPE_OF_ARGUMENT
 {
-
+    RAM                   = 1 << 2,
+    REGISTERS_MEMORY      = 0 << 2,
+    CONSTANT              = 1 << 1,
+    REGISTER              = 1 << 0
 }
 
 const char* ASSEMBLY_PUSH   = "PUSH";

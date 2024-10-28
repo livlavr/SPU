@@ -320,9 +320,158 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     return SUCCESS;
 }
 
-void create_cmd_description(int memory, int type_of_argument)
+TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, int* number_of_cmd,
+                                     char* asm_cmd_argument, CMDS_DISASSEMBLY disassembly_cmd)
 {
+    //ASSEMBLY->COMMANDS point on command
+    check_expression(asm_cmd_argument, POINTER_IS_NULL);
+    check_expression(assembly,         POINTER_IS_NULL);
 
+    char register_value[2] = "";
+    int  int_value         = 0;
+
+    assembly->commands[(*number_of_cmd)] |= disassembly_cmd;
+
+    if(asm_cmd_argument[0] == '[')
+    {
+        assembly->commands[(*number_of_cmd)] |= RAM;
+        if(sscanf(asm_cmd_argument, "[%s + %d]", register_value, &int_value) == 2)
+        {
+            assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
+            (*number_of_cmd)++;
+
+            process_register(assembly, number_of_cmd, register_value);
+            memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+        }
+        else if(sscanf(asm_cmd_argument, "[%s - %d]", register_value, &int_value) == 2)
+        {
+            assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
+            (*number_of_cmd)++;
+
+            int_value *= -1;
+            process_register(assembly, number_of_cmd, register_value);
+            memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+        }
+        else if(sscanf(asm_cmd_argument, "[%d + %s]", &int_value, register_value) == 2)
+        {
+            assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
+            (*number_of_cmd)++;
+
+            process_register(assembly, number_of_cmd, register_value);
+            memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+        }
+        else if(sscanf(asm_cmd_argument, "[%d - %s]",&int_value, register_value) == 2)
+        {
+            assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
+            (*number_of_cmd)++;
+
+            int_value *= -1;
+            process_register(assembly, number_of_cmd, register_value);
+            memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+        }
+        else if(sscanf(asm_cmd_argument, "[%d]", &int_value) == 1)
+        {
+            assembly->commands[(*number_of_cmd)] |= CONSTANT;
+            (*number_of_cmd)++;
+            memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+        }
+        else if(sscanf(asm_cmd_argument, "[%2s]", register_value) == 1)
+        {
+            assembly->commands[(*number_of_cmd)] |= REGISTER;
+            (*number_of_cmd)++;
+
+            process_register(assembly, number_of_cmd, register_value);
+        }
+        else
+        {
+                color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't PUSH / POP this
+                             element: \"%50[^\n]\".\n", commands_array);
+                //TODO test this shit
+                warning(false, VALUE_ERROR);
+        }
+    }
+    else
+    {
+        if(disassembly_cmd == DISASSEMBLY_POP)
+        {
+            assembly->commands[(*number_of_cmd)] |= REGISTER;
+            (*number_of_cmd)++;
+            if(sscanf(asm_cmd_argument, "%2s", register_value) == 1)
+            {
+                process_register(assembly, number_of_cmd, register_value);
+            }
+            else
+            {
+                color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't POP this
+                             element: \"%50[^\n]\".\n", register_value);
+
+                warning(false, VALUE_ERROR);
+            }
+        }
+        else if(disassembly_cmd == DISASSEMBLY_PUSH)
+        {
+            if(sscanf(asm_cmd_argument, "%s + %d", register_value, &int_value) == 2)
+            {
+                assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
+                (*number_of_cmd)++;
+
+                process_register(assembly, number_of_cmd, register_value);
+                memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+            }
+            else if(sscanf(asm_cmd_argument, "%s - %d", register_value, &int_value) == 2)
+            {
+                assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
+                (*number_of_cmd)++;
+
+                int_value *= -1;
+                process_register(assembly, number_of_cmd, register_value);
+                memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+            }
+            else if(sscanf(asm_cmd_argument, "%d + %s", &int_value, register_value) == 2)
+            {
+                assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
+                (*number_of_cmd)++;
+
+                process_register(assembly, number_of_cmd, register_value);
+                memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+            }
+            else if(sscanf(asm_cmd_argument, "%d - %s",&int_value, register_value) == 2)
+            {
+                assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
+                (*number_of_cmd)++;
+
+                int_value *= -1;
+                process_register(assembly, number_of_cmd, register_value);
+                memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+            }
+            else if(sscanf(asm_cmd_argument, "%d", &int_value) == 1)
+            {
+                assembly->commands[(*number_of_cmd)] |= CONSTANT;
+                (*number_of_cmd)++;
+                memcpy(assembly->commands[(*number_of_cmd)], &int_value, sizeof(int));
+            }
+            else if(sscanf(asm_cmd_argument, "%2s", register_value) == 1)
+            {
+                assembly->commands[(*number_of_cmd)] |= REGISTER;
+                (*number_of_cmd)++;
+
+                process_register(assembly, number_of_cmd, register_value);
+            }
+            else
+            {
+                    color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't PUSH / POP this
+                                 element: \"%50[^\n]\".\n", commands_array);
+                    //TODO test this shit
+                    warning(false, VALUE_ERROR);
+            }
+        }
+        else
+        {
+            warning(false, PROGRAM_ERROR);
+        }
+    }
+
+    return SUCCESS;
 }
 
 bool find_elem(char* elem, labels* array, int size_of_array)
@@ -336,42 +485,48 @@ bool find_elem(char* elem, labels* array, int size_of_array)
             break;
         }
     }
+
     return false;
 }
 
-void process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* assembly, int* number_of_cmd, char* cmd)
-{// TODO change void on TYPE_OF_ERROR
-    (*number_of_cmd)--;
-    assembly->commands[(*number_of_cmd)] = command;
-    (*number_of_cmd)++;
+TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd, char* register_value)
+{
+    check_expression(assembly,      POINTER_IS_NULL);
+    check_expression(number_of_cmd, POINTER_IS_NULL);
+    check_expression(register_value,POINTER_IS_NULL);
 
     if(!strcmp(cmd, ASSEMBLY_REG_AX))
     {
-        assembly->commands[(*number_of_cmd)] = DISASSEMBLY_REG_AX;
+        assembly->commands[(*number_of_cmd)] |= DISASSEMBLY_REG_AX;
     }
     else if(!strcmp(cmd, ASSEMBLY_REG_BX))
     {
-        assembly->commands[(*number_of_cmd)] = DISASSEMBLY_REG_BX;
+        assembly->commands[(*number_of_cmd)] |= DISASSEMBLY_REG_BX;
     }
     else if(!strcmp(cmd, ASSEMBLY_REG_CX))
     {
-        assembly->commands[(*number_of_cmd)] = DISASSEMBLY_REG_CX;
+        assembly->commands[(*number_of_cmd)] |= DISASSEMBLY_REG_CX;
     }
     else if(!strcmp(cmd, ASSEMBLY_REG_DX))
     {
-        assembly->commands[(*number_of_cmd)] = DISASSEMBLY_REG_DX;
+        assembly->commands[(*number_of_cmd)] |= DISASSEMBLY_REG_DX;
     }
     else
     {
-        color_printf(RED_TEXT, BOLD, "You trying to PUSH not a number: %s\n", cmd);
+        color_printf(RED_TEXT, BOLD, "Wrong argument: %s\n", cmd);
+
         warning(false, VALUE_ERROR);
     }
     (*number_of_cmd) += sizeof(int);
 
+    return SUCCESS;
 }
 
-void process_label(assembly_cmd_array* assembly, int number_of_cmd, char* cmd)
-{// TODO change void on TYPE_OF_ERROR
+TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, char* cmd)
+{
+    check_expression(assembly,      POINTER_IS_NULL);
+    check_expression(cmd,           POINTER_IS_NULL);
+
     size_t index_of_label = 0;
     if(cmd[strlen(cmd) - 1] == LABEL_NAME_ENDING)
     {
@@ -397,6 +552,8 @@ void process_label(assembly_cmd_array* assembly, int number_of_cmd, char* cmd)
         color_printf(RED_TEXT, BOLD, "You trying to PUSH not a number: %s", cmd);
         warning(false, VALUE_ERROR);
     }
+
+    return SUCCESS;
 }
 
 TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array* assembly) //TODO create file if doesn't exist
