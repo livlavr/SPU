@@ -3,31 +3,36 @@
 
 enum CMDS_DISASSEMBLY
 {
-    DISASSEMBLY_HLT    = 10,
-    DISASSEMBLY_PUSH   = 20,
-    DISASSEMBLY_POP    = 30,
-    DISASSEMBLY_ADD    = 40,
-    DISASSEMBLY_SUB    = 50,
-    DISASSEMBLY_DIV    = 60,
-    DISASSEMBLY_OUT    = 70,
-    DISASSEMBLY_MUL    = 80,
-    DISASSEMBLY_IN     = 90,
-    DISASSEMBLY_PUSHR  = 100,
-    DISASSEMBLY_POPR   = 200,
-    DISASSEMBLY_JA     = 1000,
-    DISASSEMBLY_JAE    = 2000,
-    DISASSEMBLY_JB     = 3000,
-    DISASSEMBLY_JBE    = 4000,
-    DISASSEMBLY_JE     = 5000,
-    DISASSEMBLY_JNE    = 6000,
-    DISASSEMBLY_JMP    = 7000,
-    DISASSEMBLY_CALL   = 8000,
-    DISASSEMBLY_RETURN = 9000,
-    DISASSEMBLY_REG_AX = 1,
-    DISASSEMBLY_REG_BX = 2,
-    DISASSEMBLY_REG_CX = 3,
-    DISASSEMBLY_REG_DX = 4
+    DISASSEMBLY_HLT    =  1 << 3,
+    DISASSEMBLY_PUSH   =  2 << 3,
+    DISASSEMBLY_POP    =  3 << 3,
+    DISASSEMBLY_ADD    =  4 << 3,
+    DISASSEMBLY_SUB    =  5 << 3,
+    DISASSEMBLY_DIV    =  6 << 3,
+    DISASSEMBLY_OUT    =  7 << 3,
+    DISASSEMBLY_MUL    =  8 << 3,
+    DISASSEMBLY_IN     =  9 << 3,
+    DISASSEMBLY_PUSHR  = 10 << 3,
+    DISASSEMBLY_POPR   = 11 << 3,
+    DISASSEMBLY_JA     = 12 << 3,
+    DISASSEMBLY_JAE    = 13 << 3,
+    DISASSEMBLY_JB     = 14 << 3,
+    DISASSEMBLY_JBE    = 15 << 3,
+    DISASSEMBLY_JE     = 16 << 3,
+    DISASSEMBLY_JNE    = 17 << 3,
+    DISASSEMBLY_JMP    = 18 << 3,
+    DISASSEMBLY_CALL   = 19 << 3,
+    DISASSEMBLY_RETURN = 20 << 3,
+    DISASSEMBLY_REG_AX = 21 << 3,
+    DISASSEMBLY_REG_BX = 22 << 3,
+    DISASSEMBLY_REG_CX = 23 << 3,
+    DISASSEMBLY_REG_DX = 24 << 3
 };
+
+enum TYPE_OF_ARGUMENT
+{
+
+}
 
 const char* ASSEMBLY_PUSH   = "PUSH";
 const char* ASSEMBLY_POP    = "POP" ;
@@ -53,7 +58,7 @@ const char* ASSEMBLY_CALL   = "CALL";
 const char* ASSEMBLY_RETURN = "RETURN";
 
 
-const size_t MAX_NUMBER_OF_CMDS      = 50;
+const size_t MAX_NUMBER_OF_CMDS      = 50; //TODO delete all bad consts
 const size_t MAX_CMD_SIZE            = 15;
 const size_t MAX_NUMBER_OF_LABELS    = 10;
 const size_t NUMBER_OF_REGISTERS     = 5;

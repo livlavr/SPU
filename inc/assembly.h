@@ -11,17 +11,17 @@ struct labels
 
 struct assembly_cmd_array
 {
-    int*   commands                   = NULL;
+    char*  commands                   = NULL;
     labels tags[MAX_NUMBER_OF_LABELS] = {};
     size_t size_of_labels_array       = 0;
     size_t size_of_commands_array     = 0;
 };
 
-TYPE_OF_ERROR fill_bin_cmds_array(const char* buffer  , assembly_cmd_array* assembly);
+TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array* assembly);
 TYPE_OF_ERROR output_cmds_to_bin (const char* filename, const assembly_cmd_array* assembly);
 void          process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* assembly,
                                int* number_of_cmd, char* cmd);
-void          process_label(assembly_cmd_array* assembly, int number_of_cmd, char cmd[]);
+void          process_label(assembly_cmd_array* assembly, int number_of_cmd, char* cmd);
 bool          find_elem(char* elem, labels* array, int size_of_array);
 
 #define scan_command(buffer, cmd) sscanf(buffer, "%14s", cmd)

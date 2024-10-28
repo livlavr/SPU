@@ -17,16 +17,16 @@
 int main(int argc, char** argv)
 {
     assembly_cmd_array assembly = {};
-    char* input_filename              = NULL;
-    char* output_filename             = NULL;
+    char* input_filename        = NULL;
+    char* output_filename       = NULL;
     catch_filenames(argc, argv, &input_filename, &output_filename);
-    fill_bin_cmds_array(input_filename,  &assembly);
+    fill_bin_cmds_array_bytes(input_filename,  &assembly);
     output_cmds_to_bin (output_filename, &assembly);
 
     return 0;
 }
 
-TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* assembly)
+TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array* assembly)
 {
     check_expression(assembly != NULL, POINTER_IS_NULL);
 
@@ -61,7 +61,7 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
 
     fill_commands(buffer, size_of_buffer, asm_commands);
 
-    assembly->commands = (int*)calloc(assembly->size_of_commands_array, sizeof(int));
+    assembly->commands = (char*)calloc(assembly->size_of_commands_array, sizeof(int));
     warning(assembly->commands, CALLOC_ERROR);
 
     int    number_of_cmd         = 0;
@@ -83,7 +83,8 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             is_number = sscanf(*asm_commands, "%d", &value_of_cmd);
             if (is_number)
             {
-                assembly->commands[number_of_cmd++] = value_of_cmd;
+                assembly->commands[number_of_cmd] = value_of_cmd;
+                number_of_cmd += sizeof(int);
                 asm_commands++;
                 printf("%d - VALUE\n", value_of_cmd);
             }
@@ -91,7 +92,7 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             {
                 scan_command(*asm_commands, &cmd);
                 asm_commands++;
-                number_of_cmd++;
+                number_of_cmd += sizeof(int);
                 printf("%s - VALUE\n", cmd);
                 process_register(DISASSEMBLY_PUSHR, assembly, &number_of_cmd, cmd);
             }
@@ -113,7 +114,7 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
             {
                 scan_command(*asm_commands, &cmd);
                 asm_commands++;
-                number_of_cmd++;
+                number_of_cmd += sizeof(int);
                 process_register(DISASSEMBLY_POPR, assembly, &number_of_cmd, cmd);
             }
         }
@@ -305,10 +306,10 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
         {
             printf("End of first compilation\n");
             number_of_compilation++;
-            asm_commands           = begin_of_asm_commands;
-            number_of_cmd          = 0;
-            value_of_cmd           = 0;
-            is_number              = 0;
+            asm_commands  = begin_of_asm_commands;
+            number_of_cmd = 0;
+            value_of_cmd  = 0;
+            is_number     = 0;
             memset(cmd, 0, MAX_CMD_SIZE);
         }
     }
@@ -317,6 +318,11 @@ TYPE_OF_ERROR fill_bin_cmds_array(const char* filename, assembly_cmd_array* asse
     fclose(asm_file);
 
     return SUCCESS;
+}
+
+void create_cmd_description(int memory, int type_of_argument)
+{
+
 }
 
 bool find_elem(char* elem, labels* array, int size_of_array)
@@ -333,36 +339,39 @@ bool find_elem(char* elem, labels* array, int size_of_array)
     return false;
 }
 
-void process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* assembly, int* number_of_cmd, char cmd[])
-{
+void process_register(CMDS_DISASSEMBLY command, assembly_cmd_array* assembly, int* number_of_cmd, char* cmd)
+{// TODO change void on TYPE_OF_ERROR
     (*number_of_cmd)--;
-    assembly->commands[(*number_of_cmd)++] = command;
+    assembly->commands[(*number_of_cmd)] = command;
+    (*number_of_cmd)++;
 
     if(!strcmp(cmd, ASSEMBLY_REG_AX))
     {
-        assembly->commands[(*number_of_cmd)++] = DISASSEMBLY_REG_AX;
+        assembly->commands[(*number_of_cmd)] = DISASSEMBLY_REG_AX;
     }
     else if(!strcmp(cmd, ASSEMBLY_REG_BX))
     {
-        assembly->commands[(*number_of_cmd)++] = DISASSEMBLY_REG_BX;
+        assembly->commands[(*number_of_cmd)] = DISASSEMBLY_REG_BX;
     }
     else if(!strcmp(cmd, ASSEMBLY_REG_CX))
     {
-        assembly->commands[(*number_of_cmd)++] = DISASSEMBLY_REG_CX;
+        assembly->commands[(*number_of_cmd)] = DISASSEMBLY_REG_CX;
     }
     else if(!strcmp(cmd, ASSEMBLY_REG_DX))
     {
-        assembly->commands[(*number_of_cmd)++] = DISASSEMBLY_REG_DX;
+        assembly->commands[(*number_of_cmd)] = DISASSEMBLY_REG_DX;
     }
     else
     {
         color_printf(RED_TEXT, BOLD, "You trying to PUSH not a number: %s\n", cmd);
         warning(false, VALUE_ERROR);
     }
+    (*number_of_cmd) += sizeof(int);
+
 }
 
-void process_label(assembly_cmd_array* assembly, int number_of_cmd, char cmd[])
-{
+void process_label(assembly_cmd_array* assembly, int number_of_cmd, char* cmd)
+{// TODO change void on TYPE_OF_ERROR
     size_t index_of_label = 0;
     if(cmd[strlen(cmd) - 1] == LABEL_NAME_ENDING)
     {
@@ -403,7 +412,7 @@ TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array*
         return FILE_OPEN_ERROR;
     }
 
-    fwrite(assembly->commands, sizeof(int), assembly->size_of_commands_array, bin);
+    fwrite(assembly->commands, sizeof(char), assembly->size_of_commands_array, bin);
 
     return SUCCESS;
 }
