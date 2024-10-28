@@ -35,7 +35,7 @@ enum TYPE_OF_ARGUMENT
     REGISTERS_MEMORY      = 0 << 2,
     CONSTANT              = 1 << 1,
     REGISTER              = 1 << 0
-}
+};
 
 const char* ASSEMBLY_PUSH   = "PUSH";
 const char* ASSEMBLY_POP    = "POP" ;
