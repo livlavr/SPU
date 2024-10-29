@@ -132,7 +132,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd += sizeof(int);
+            number_of_cmd += (int)sizeof(int);
         }
         else if(!strcmp(ASSEMBLY_JAE, cmd))
         {
@@ -145,7 +145,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd += sizeof(int);
+            number_of_cmd += (int)sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JB, cmd))
@@ -159,7 +159,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd += sizeof(int);
+            number_of_cmd += (int)sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JBE, cmd))
@@ -173,7 +173,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd += sizeof(int);
+            number_of_cmd += (int)sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JE, cmd))
@@ -187,7 +187,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd += sizeof(int);
+            number_of_cmd += (int)sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JNE, cmd))
@@ -201,7 +201,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd += sizeof(int);
+            number_of_cmd += (int)sizeof(int);
 
         }
         else if(!strcmp(ASSEMBLY_JMP, cmd))
@@ -215,7 +215,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd += sizeof(int);
+            number_of_cmd += (int)sizeof(int);
         }
         else if(!strcmp(ASSEMBLY_CALL, cmd))
         {
@@ -228,7 +228,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if (number_of_compilation) process_label(assembly, number_of_cmd, cmd);
 
             asm_commands++;
-            number_of_cmd += sizeof(int);
+            number_of_cmd += (int)sizeof(int);
         }
         else if(!strcmp(ASSEMBLY_RETURN, cmd))
         {
@@ -434,7 +434,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         warning(false, PROGRAM_ERROR);
     }
 
-    (*number_of_cmd) += sizeof(int);
+    (*number_of_cmd) += (int)sizeof(int);
     (*asm_commands)++;
 
     return SUCCESS;
@@ -483,7 +483,7 @@ TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd,
 
         warning(false, VALUE_ERROR);
     }
-    (*number_of_cmd) += sizeof(int);
+    (*number_of_cmd) += (int)sizeof(int);
 
     return SUCCESS;
 }

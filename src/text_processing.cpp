@@ -7,6 +7,7 @@
 #include "stack_public.h"
 #include "debug_macros.h"
 #include "text_processing.h"
+#include "commands.h"
 
 TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
                              char** output_filename, const char* source_filename)
@@ -21,7 +22,7 @@ TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
         process_flag(3, argv, input_filename, output_filename);
     }
 
-    if(strcmp(source_filename, "src/assembly.cpp") == 0)
+    if(strcmp(source_filename, "src/assembly.cpp") == 0) //TODO make source consts
     {
         if(*input_filename == NULL)
         {
@@ -83,9 +84,8 @@ TYPE_OF_ERROR set_default_filename(char** filename, const char* source_filename)
 {
     size_t size_of_filename = sizeof(source_filename) / sizeof(char);
     *filename = (char*)calloc(size_of_filename + 1, sizeof(char));
-    //TODO wtf strange error
+    //TODO wtf strange error (didnt exist file src/assembly.asmsrc/spu_commands.bin :/)
     warning(*filename, CALLOC_ERROR);
-    // printf("HUI\n"); //TODO debug
     strcpy(*filename, source_filename);
 
     return SUCCESS;
@@ -111,17 +111,17 @@ TYPE_OF_ERROR count_cmds(char* buffer, size_t size_of_text, size_t* number_of_cm
 {
     check_expression(buffer, POINTER_IS_NULL);
 
-    char* current_char  = buffer;
+    char* current_char          = buffer;
+    char command[MAX_CMD_SIZE]  = "";
 
     while (current_char < buffer + size_of_text - 1)
     {
-        if(*current_char == '[')
+        if(strcmp(command, ASSEMBLY_PUSH) == 0 || strcmp(command, ASSEMBLY_POP) == 0)
         {
-            while(*current_char != ']')
+            while(*current_char != '\n')
             {
                 current_char++;
             }
-            current_char++;
         }
         if (*(current_char + 1) != '\n' && *(current_char + 1) != ' ' &&
             *(current_char + 1) != '\t' && *(current_char + 1) != '\0')
@@ -129,9 +129,11 @@ TYPE_OF_ERROR count_cmds(char* buffer, size_t size_of_text, size_t* number_of_cm
             if (*current_char == '\n' || *current_char == ' ' || *current_char == '\t')
             {
                 (*number_of_cmds)++;
+                strcpy(command, "");
             }
         }
         current_char++;
+        strcat(command, current_char);
     }
     (*number_of_cmds)++;
 
@@ -143,23 +145,21 @@ TYPE_OF_ERROR fill_commands(char* buffer, size_t size_of_text, char** asm_comman
     check_expression(buffer,       POINTER_IS_NULL);
     check_expression(asm_commands, POINTER_IS_NULL);
 
-    // $DEBUG("%s", buffer);
-    // $DEBUG("%lu", size_of_text);
-
     int   number_of_cmd           = 0;
+    char command[MAX_CMD_SIZE]    = "";
     char* current_char            = buffer;
     asm_commands[number_of_cmd++] = buffer;
     current_char++;
 
     while(current_char < buffer + size_of_text - 1)
     {
-        if(*current_char == '[')
+        if(strcmp(command, ASSEMBLY_PUSH) == 0 || strcmp(command, ASSEMBLY_POP) == 0)
         {
-            while(*current_char != ']')
+            asm_commands[number_of_cmd++] = current_char + 1;
+            while(*current_char != '\n')
             {
                 current_char++;
             }
-            current_char++;
         }
         if(*current_char == '\n' || *current_char == ' ' ||
                 *current_char == '\t' || *current_char == '\0')
@@ -167,8 +167,10 @@ TYPE_OF_ERROR fill_commands(char* buffer, size_t size_of_text, char** asm_comman
             if(*(current_char + 1) != '\n' && *(current_char + 1) != ' ' && *(current_char + 1) != '\t')
             {
                 asm_commands[number_of_cmd++] = current_char + 1;
+                strcpy(command, "");
             }
         }
+        strcat(command, current_char);
         current_char++;
     }
 

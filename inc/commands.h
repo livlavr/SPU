@@ -36,28 +36,28 @@ enum TYPE_OF_ARGUMENT // 00000MIR
     REGISTER              = 1 << 0
 };
 
-const char* ASSEMBLY_PUSH   = "PUSH";
-const char* ASSEMBLY_POP    = "POP" ;
-const char* ASSEMBLY_ADD    = "ADD" ;
-const char* ASSEMBLY_SUB    = "SUB" ;
-const char* ASSEMBLY_DIV    = "DIV" ;
-const char* ASSEMBLY_OUT    = "OUT" ;
-const char* ASSEMBLY_IN     = "IN"  ;
-const char* ASSEMBLY_MUL    = "MUL" ;
-const char* ASSEMBLY_HLT    = "HLT" ;
-const char* ASSEMBLY_REG_AX = "AX"  ;
-const char* ASSEMBLY_REG_BX = "BX"  ;
-const char* ASSEMBLY_REG_CX = "CX"  ;
-const char* ASSEMBLY_REG_DX = "DX"  ;
-const char* ASSEMBLY_JA     = "JA"  ;
-const char* ASSEMBLY_JAE    = "JAE" ;
-const char* ASSEMBLY_JB     = "JB"  ;
-const char* ASSEMBLY_JBE    = "JBE" ;
-const char* ASSEMBLY_JE     = "JE"  ;
-const char* ASSEMBLY_JNE    = "JNE" ;
-const char* ASSEMBLY_JMP    = "JMP" ;
-const char* ASSEMBLY_CALL   = "CALL";
-const char* ASSEMBLY_RETURN = "RETURN";
+static const char* ASSEMBLY_PUSH   = "PUSH";
+static const char* ASSEMBLY_POP    = "POP" ;
+static const char* ASSEMBLY_ADD    = "ADD" ;
+static const char* ASSEMBLY_SUB    = "SUB" ;
+static const char* ASSEMBLY_DIV    = "DIV" ;
+static const char* ASSEMBLY_OUT    = "OUT" ;
+static const char* ASSEMBLY_IN     = "IN"  ;
+static const char* ASSEMBLY_MUL    = "MUL" ;
+static const char* ASSEMBLY_HLT    = "HLT" ;
+static const char* ASSEMBLY_REG_AX = "AX"  ;
+static const char* ASSEMBLY_REG_BX = "BX"  ;
+static const char* ASSEMBLY_REG_CX = "CX"  ;
+static const char* ASSEMBLY_REG_DX = "DX"  ;
+static const char* ASSEMBLY_JA     = "JA"  ;
+static const char* ASSEMBLY_JAE    = "JAE" ;
+static const char* ASSEMBLY_JB     = "JB"  ;
+static const char* ASSEMBLY_JBE    = "JBE" ;
+static const char* ASSEMBLY_JE     = "JE"  ;
+static const char* ASSEMBLY_JNE    = "JNE" ;
+static const char* ASSEMBLY_JMP    = "JMP" ;
+static const char* ASSEMBLY_CALL   = "CALL";
+static const char* ASSEMBLY_RETURN = "RETURN";
 
 
 const size_t MAX_NUMBER_OF_CMDS      = 50; //TODO delete all bad consts
