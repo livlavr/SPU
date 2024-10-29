@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     char* input_filename        = NULL;
     char* output_filename       = NULL;
     catch_filenames(argc, argv, &input_filename, &output_filename);
-    printf("%s\n", input_filename);
+    // printf("%s\n", input_filename);
     // printf("%s", output_filename);
     fill_bin_cmds_array_bytes(input_filename,  &assembly);
     output_cmds_to_bin (output_filename, &assembly);
@@ -71,7 +71,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     int    is_number             = 0;
     int    number_of_compilation = 0;
     char** begin_of_asm_commands = asm_commands;
-
     while(asm_commands < begin_of_asm_commands + assembly->size_of_commands_array)
     {
         scan_command(*asm_commands, &cmd);
@@ -292,24 +291,21 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
                                      int* number_of_cmd, CMDS_DISASSEMBLY disassembly_cmd)
 {
     //ASSEMBLY->COMMANDS point on command
-    check_expression(asm_commands,     POINTER_IS_NULL);
-    check_expression(assembly,         POINTER_IS_NULL);
+    check_expression(asm_commands, POINTER_IS_NULL);
+    check_expression(assembly,     POINTER_IS_NULL);
 
-    char register_value[2]    = "";
-    int  int_value            = 0;
+    char register_value[2] = "";
+    int  int_value         = 0;
 
     assembly->commands[(*number_of_cmd)] |= disassembly_cmd;
     (*asm_commands)++;
-
     if((**asm_commands)[0] == '[')
     {
         assembly->commands[(*number_of_cmd)] |= RAM;
-        return SUCCESS;
         if(sscanf(**asm_commands, "[%s + %d]", register_value, &int_value) == 2)
         {
             assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
             (*number_of_cmd)++;
-
             process_register(assembly, number_of_cmd, register_value);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
@@ -322,7 +318,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
             process_register(assembly, number_of_cmd, register_value);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
-        else if(sscanf(**asm_commands, "[%d + %s]", &int_value, register_value) == 2)
+        else if(sscanf(**asm_commands, "[%d + %2s]", &int_value, register_value) == 2)
         {
             assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
             (*number_of_cmd)++;
@@ -330,7 +326,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
             process_register(assembly, number_of_cmd, register_value);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
-        else if(sscanf(**asm_commands, "[%d - %s]",&int_value, register_value) == 2)
+        else if(sscanf(**asm_commands, "[%d - %2s]",&int_value, register_value) == 2)
         {
             assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
             (*number_of_cmd)++;
@@ -414,7 +410,6 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         }
         else if(sscanf(**asm_commands, "%d", &int_value) == 1)
         {
-            // printf("HUI\n");
             assembly->commands[(*number_of_cmd)] |= CONSTANT;
             (*number_of_cmd)++;
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));

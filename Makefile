@@ -53,7 +53,7 @@ all   :
 	@$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
 $(TARGET) :  $(BUILD_DIR) $(OBJECT)
-	$(CXX)   $(BUILD_OBJ) -o $(TARGET) -D _NDEBUG
+	$(CXX) $(BUILD_OBJ) -o $(TARGET) -D _NDEBUG
 	@printf "$(GREEN_TEXT)$(TARGET) COMPILED$(DEFAULT_TEXT)\n"
 
 $(BUILD_DIR) :

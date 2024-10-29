@@ -115,6 +115,14 @@ TYPE_OF_ERROR count_cmds(char* buffer, size_t size_of_text, size_t* number_of_cm
 
     while (current_char < buffer + size_of_text - 1)
     {
+        if(*current_char == '[')
+        {
+            while(*current_char != ']')
+            {
+                current_char++;
+            }
+            current_char++;
+        }
         if (*(current_char + 1) != '\n' && *(current_char + 1) != ' ' &&
             *(current_char + 1) != '\t' && *(current_char + 1) != '\0')
         {
@@ -145,6 +153,14 @@ TYPE_OF_ERROR fill_commands(char* buffer, size_t size_of_text, char** asm_comman
 
     while(current_char < buffer + size_of_text - 1)
     {
+        if(*current_char == '[')
+        {
+            while(*current_char != ']')
+            {
+                current_char++;
+            }
+            current_char++;
+        }
         if(*current_char == '\n' || *current_char == ' ' ||
                 *current_char == '\t' || *current_char == '\0')
         {
