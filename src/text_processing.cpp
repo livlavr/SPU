@@ -112,67 +112,107 @@ TYPE_OF_ERROR count_cmds(char* buffer, size_t size_of_text, size_t* number_of_cm
     check_expression(buffer, POINTER_IS_NULL);
 
     char* current_char          = buffer;
-    char command[MAX_CMD_SIZE]  = "";
+    char  command[MAX_CMD_SIZE] = "";
+    // char*  end_of_file = strchr(buffer, '\0');
 
-    while (current_char < buffer + size_of_text - 1)
+    while (current_char < buffer + size_of_text)
     {
-        if(strcmp(command, ASSEMBLY_PUSH) == 0 || strcmp(command, ASSEMBLY_POP) == 0)
+        if (*current_char == '\n')
         {
-            while(*current_char != '\n')
-            {
-                current_char++;
-            }
-        }
-        if (*(current_char + 1) != '\n' && *(current_char + 1) != ' ' &&
-            *(current_char + 1) != '\t' && *(current_char + 1) != '\0')
-        {
-            if (*current_char == '\n' || *current_char == ' ' || *current_char == '\t')
-            {
-                (*number_of_cmds)++;
-                strcpy(command, "");
-            }
+            (*number_of_cmds)++;
         }
         current_char++;
-        strcat(command, current_char);
     }
     (*number_of_cmds)++;
-
+    // {
+    //
+    // }
+    // int i = 0;
+    // while (current_char < buffer + size_of_text - 1)
+    // {
+    //     command[i] = *current_char;
+    //     command[i + 1] = '\0';
+    //     printf("%s - cmd\n", command);
+    //     i++;
+    //     if(strcmp(command, ASSEMBLY_PUSH) == 0 || strcmp(command, ASSEMBLY_POP) == 0)
+    //     {
+    //         printf("HUI\n");
+    //         while(*current_char != '\n')
+    //         {
+    //             printf("while\n");
+    //             current_char++;
+    //         }
+    //     }
+    //     if (*(current_char + 1) != '\n' && *(current_char + 1) != ' ' &&
+    //         *(current_char + 1) != '\t' && *(current_char + 1) != '\0')
+    //     {
+    //         if (*current_char == '\n' || *current_char == ' ' || *current_char == '\t')
+    //         {
+    //             printf("if\n");
+    //             (*number_of_cmds)++;
+    //             printf("strcpy\n");
+    //             strcpy(command, "");
+    //             i = 0;
+    //         }
+    //     }
+    //     current_char++;
+    // }
+    // (*number_of_cmds)++;
+    // printf("%d - numbrofcmds", *number_of_cmds);
+    printf("%d\n", (*number_of_cmds));
     return SUCCESS;
 }
 
-TYPE_OF_ERROR fill_commands(char* buffer, size_t size_of_text, char** asm_commands)
+TYPE_OF_ERROR fill_commands(char* buffer, size_t number_of_cmds, char** asm_commands)
 {
     check_expression(buffer,       POINTER_IS_NULL);
     check_expression(asm_commands, POINTER_IS_NULL);
 
-    int   number_of_cmd           = 0;
-    char command[MAX_CMD_SIZE]    = "";
-    char* current_char            = buffer;
-    asm_commands[number_of_cmd++] = buffer;
-    current_char++;
+    size_t number_of_line = 0;
+    char* current_char    = buffer;
+    asm_commands[number_of_line] = current_char;
+    number_of_line++;
 
-    while(current_char < buffer + size_of_text - 1)
+    while (number_of_line < number_of_cmds - 1)
     {
-        if(strcmp(command, ASSEMBLY_PUSH) == 0 || strcmp(command, ASSEMBLY_POP) == 0)
+        if (*current_char == '\n')
         {
-            asm_commands[number_of_cmd++] = current_char + 1;
-            while(*current_char != '\n')
-            {
-                current_char++;
-            }
+            asm_commands[number_of_line] = current_char + 1;
+            number_of_line++;
         }
-        if(*current_char == '\n' || *current_char == ' ' ||
-                *current_char == '\t' || *current_char == '\0')
-        {
-            if(*(current_char + 1) != '\n' && *(current_char + 1) != ' ' && *(current_char + 1) != '\t')
-            {
-                asm_commands[number_of_cmd++] = current_char + 1;
-                strcpy(command, "");
-            }
-        }
-        strcat(command, current_char);
         current_char++;
     }
-
+    // asm_commands[number_of_line] = current_char;
+    // int   number_of_cmd           = 0;
+    // char command[MAX_CMD_SIZE]    = "";
+    // char* current_char            = buffer;
+    // asm_commands[number_of_cmd++] = buffer;
+    // current_char++;
+    // while(current_char < buffer + size_of_text - 1)
+    // {
+    //     if(strcmp(command, ASSEMBLY_PUSH) == 0 || strcmp(command, ASSEMBLY_POP) == 0)
+    //     {
+    //         asm_commands[number_of_cmd++] = current_char + 1;
+    //         while(*current_char != '\n')
+    //         {
+    //             current_char++;
+    //         }
+    //     }
+    //     if(*current_char == '\n' || *current_char == ' ' ||
+    //             *current_char == '\t' || *current_char == '\0')
+    //     {
+    //         if(*(current_char + 1) != '\n' && *(current_char + 1) != ' ' && *(current_char + 1) != '\t')
+    //         {
+    //             asm_commands[number_of_cmd++] = current_char + 1;
+    //             strcpy(command, "");
+    //         }
+    //     }
+    //     strcat(command, current_char);
+    //     current_char++;
+    // }
+    for(int i = 0; i < number_of_cmds - 1; i++)
+    {
+        printf("%c\n", asm_commands[i][0]);
+    }
     return SUCCESS;
 }

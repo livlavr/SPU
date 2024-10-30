@@ -47,19 +47,11 @@ vpath %.cpp $(SRC_DIR)
 .PHONY: clean all
 all   :
 	clear
+	@mkdir -p build
 	make quick_assembly
 	make quick_processor
 	@printf "$(GREEN_TEXT) $(TARGET) COMPILED $(DEFAULT_TEXT)\n"
 	@$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
-
-$(TARGET) : $(BUILD_DIR)
-
-$(ASSEMBLY_TARGET) : $(BUILD_DIR)
-
-$(DISASSEMBLY_TARGET) : $(BUILD_DIR)
-
-$(BUILD_DIR) :
-	mkdir -p build
 
 quick_assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
@@ -71,14 +63,15 @@ quick_processor : $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
 
 assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	clear
-	$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
-	$^
+	@mkdir -p build
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(ASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
 	@printf "To start an assembly write:$(GREEN_TEXT) $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET)) [--input / --output] [file PATH] $(DEFAULT_TEXT)\n"
 	@printf "Do not type any flags to start assembly with default settings\n"
 
 disassembly : $(addprefix $(SRC_DIR), $(DISASSEMBLY_SRC))
 	clear
+	@mkdir -p build
 	@$(CXX) $(CFLAGS) $(DED_FLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(DISASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
 	@printf "To start an processor write:$(GREEN_TEXT) $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET)) [--input / --output] [file PATH] $(DEFAULT_TEXT)\n"

@@ -50,7 +50,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     warning(buffer, CALLOC_ERROR);
 
     fread(buffer, sizeof(char), size_of_buffer, asm_file);
-
+    printf("countCommands:\n");
     count_cmds(buffer, size_of_buffer, &(assembly->size_of_commands_array));
 
     char cmd[MAX_CMD_SIZE] = "";
@@ -61,7 +61,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
 
     // $DEBUG("%lu", assembly->size_of_commands_array);
 
-    fill_commands(buffer, size_of_buffer, asm_commands);
+    fill_commands(buffer, assembly->size_of_commands_array, asm_commands);
 
     assembly->commands = (char*)calloc(assembly->size_of_commands_array, sizeof(int));
     warning(assembly->commands, CALLOC_ERROR);
@@ -71,14 +71,17 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     int    is_number             = 0;
     int    number_of_compilation = 0;
     char** begin_of_asm_commands = asm_commands;
-    while(asm_commands < begin_of_asm_commands + assembly->size_of_commands_array)
+    $DEBUG("%c", **begin_of_asm_commands);
+    char** size_of_asm           = begin_of_asm_commands + assembly->size_of_commands_array - 1;
+    while(asm_commands < size_of_asm)
     {
         scan_command(*asm_commands, &cmd);
-        // printf("%s - line\n", cmd);
+        $DEBUG("%c", **begin_of_asm_commands);
         if(!strcmp(ASSEMBLY_PUSH, cmd)) // TODO strcmp == 0
         {
             printf("%s - CMD\n", cmd);
             create_cmd_description(assembly, &asm_commands, &number_of_cmd, DISASSEMBLY_PUSH);
+            printf("%c\n", **asm_commands);
         }
         else if(!strcmp(ASSEMBLY_POP, cmd))
         {
@@ -272,16 +275,17 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
         if((asm_commands == begin_of_asm_commands + assembly->size_of_commands_array - 1) && number_of_compilation == 0)
         {
             printf("End of first compilation\n");
+            printf("%c\n", **(asm_commands - 1));
             number_of_compilation++;
             asm_commands  = begin_of_asm_commands;
             number_of_cmd = 0;
             value_of_cmd  = 0;
             is_number     = 0;
             memset(cmd, 0, MAX_CMD_SIZE);
+            printf("%c - end\n", **begin_of_asm_commands);
         }
     }
     assembly->size_of_commands_array = number_of_cmd;
-
     fclose(asm_file);
 
     return SUCCESS;
@@ -296,9 +300,10 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
 
     char register_value[2] = "";
     int  int_value         = 0;
-
+    char* begin_of_line = **asm_commands;
+    $DEBUG("%c", ***asm_commands);
     assembly->commands[(*number_of_cmd)] |= disassembly_cmd;
-    (*asm_commands)++;
+    **asm_commands = (strchr(**asm_commands, ' ') + 1);
     if((**asm_commands)[0] == '[')
     {
         assembly->commands[(*number_of_cmd)] |= RAM;
@@ -374,6 +379,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
     }
     else if(disassembly_cmd == DISASSEMBLY_PUSH)
     {
+        $DEBUG("%c", ***asm_commands);
         if(sscanf(**asm_commands, "%s + %d", register_value, &int_value) == 2)
         {
             assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
@@ -410,9 +416,9 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         }
         else if(sscanf(**asm_commands, "%d", &int_value) == 1)
         {
-            assembly->commands[(*number_of_cmd)] |= CONSTANT;
-            (*number_of_cmd)++;
-            memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
+            // assembly->commands[(*number_of_cmd)] |= CONSTANT;
+            // (*number_of_cmd)++;
+            // memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "%2s", register_value) == 1)
         {
@@ -435,6 +441,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
     }
 
     (*number_of_cmd) += (int)sizeof(int);
+    (**asm_commands)   = begin_of_line;
     (*asm_commands)++;
 
     return SUCCESS;

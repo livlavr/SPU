@@ -50,6 +50,7 @@
 [] make exception on [AX + 5] in text_processing
 [] Bin and Asm in build
 [] make output line of ERROR and It`s prototipe in assembly
+[] do_cmd - in processor
 [] После добавления оперативки нужно будет разбить индекс на два: общий индекс, индекс команд
 [] Сделать задержку между командами
 [] Добавить прыжки на индекс строки
