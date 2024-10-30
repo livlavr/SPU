@@ -30,7 +30,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 {
     FILE* bin_file = fopen(filename, "rb");
 
-    if (bin_file == NULL)
+    if(bin_file == NULL)
     {
         printf("File with %s name doesn't exist\n", filename);
 
@@ -321,21 +321,21 @@ TYPE_OF_ERROR int_to_str(int number, char* str)
     int number_of_char = 0;
     int sign           = number;
 
-    if (number == 0)
+    if(number == 0)
     {
         str[number_of_char++]   = '0';
     }
-    if (number < 0)
+    if(number < 0)
     {
         number = -number;
     }
-    while (number > 0)
+    while(number > 0)
     {
         str[number_of_char++] = number % 10 + '0';
       	number               /= 10;
     }
 
-    if (sign < 0)
+    if(sign < 0)
     {
         str[number_of_char++] = '-';
     }
@@ -349,7 +349,7 @@ TYPE_OF_ERROR int_to_str(int number, char* str)
 
 inline void reverse_str(char* str, int length)
 {
-    for (int left_char = 0, right_char = length - 1; left_char < right_char; left_char++, right_char--)
+    for(int left_char = 0, right_char = length - 1; left_char < right_char; left_char++, right_char--)
     {
         char switcher   = str[left_char];
         str[left_char]  = str[right_char];
@@ -404,7 +404,7 @@ TYPE_OF_ERROR output_cmds_to_asm(const char* filename, const disassembly_cmd_arr
 
     FILE* asm_file = fopen(filename, "w");
 
-    if (asm_file == NULL)
+    if(asm_file == NULL)
     {
         color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\number", filename); //TODO rename enum
 

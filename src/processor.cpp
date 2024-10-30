@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 
     FILE* bin_file = fopen(input_filename, "rb");
 
-    if (bin_file == NULL)
+    if(bin_file == NULL)
     {
         color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", input_filename);
 
