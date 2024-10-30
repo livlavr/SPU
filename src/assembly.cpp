@@ -312,6 +312,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
             assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
             (*number_of_cmd)++;
             process_register(assembly, number_of_cmd, register_value);
+            (*number_of_cmd) += (int)sizeof(int);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "[%s - %d]", register_value, &int_value) == 2)
@@ -321,6 +322,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
 
             int_value *= -1;
             process_register(assembly, number_of_cmd, register_value);
+            (*number_of_cmd) += (int)sizeof(int);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "[%d + %2s]", &int_value, register_value) == 2)
@@ -329,6 +331,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
             (*number_of_cmd)++;
 
             process_register(assembly, number_of_cmd, register_value);
+            (*number_of_cmd) += (int)sizeof(int);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "[%d - %2s]",&int_value, register_value) == 2)
@@ -338,6 +341,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
 
             int_value *= -1;
             process_register(assembly, number_of_cmd, register_value);
+            (*number_of_cmd) += (int)sizeof(int);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "[%d]", &int_value) == 1)
@@ -384,8 +388,8 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         {
             assembly->commands[(*number_of_cmd)] |= REGISTER | CONSTANT;
             (*number_of_cmd)++;
-
             process_register(assembly, number_of_cmd, register_value);
+            (*number_of_cmd) += (int)sizeof(int);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "%s - %d", register_value, &int_value) == 2)
@@ -395,6 +399,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
 
             int_value *= -1;
             process_register(assembly, number_of_cmd, register_value);
+            (*number_of_cmd) += (int)sizeof(int);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "%d + %s", &int_value, register_value) == 2)
@@ -403,6 +408,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
             (*number_of_cmd)++;
 
             process_register(assembly, number_of_cmd, register_value);
+            (*number_of_cmd) += (int)sizeof(int);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "%d - %s",&int_value, register_value) == 2)
@@ -412,13 +418,14 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
 
             int_value *= -1;
             process_register(assembly, number_of_cmd, register_value);
+            (*number_of_cmd) += (int)sizeof(int);
             memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "%d", &int_value) == 1)
         {
-            // assembly->commands[(*number_of_cmd)] |= CONSTANT;
-            // (*number_of_cmd)++;
-            // memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
+            assembly->commands[(*number_of_cmd)] |= CONSTANT;
+            (*number_of_cmd)++;
+            memcpy(&(assembly->commands[(*number_of_cmd)]), &int_value, sizeof(int));
         }
         else if(sscanf(**asm_commands, "%2s", register_value) == 1)
         {
@@ -490,7 +497,6 @@ TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd,
 
         warning(false, VALUE_ERROR);
     }
-    (*number_of_cmd) += (int)sizeof(int);
 
     return SUCCESS;
 }
