@@ -141,7 +141,12 @@ TYPE_OF_ERROR fill_commands(char* buffer, size_t number_of_cmds, char** asm_comm
     {
         if(*current_char == '\n')
         {
+            while((*(current_char + 1) == '\n') || (*(current_char + 1) == '\t') || (*(current_char + 1) == ' '))
+            {
+                current_char++;
+            }
             asm_commands[number_of_line] = current_char + 1;
+            $DEBUG("%c", *(current_char + 1));
             number_of_line++;
         }
         current_char++;

@@ -6,17 +6,15 @@
 #include "stack_public.h"
 #include "color_printf.h"
 #include "text_processing.h"
+#include "processor.h"
+#include "debug_macros.h"
 
 int main(int argc, char** argv)
 {
-    stack* st = NULL;
-    stack_init(st, 15);
-
-    stack* functions_return_codes = NULL;
-    stack_init(functions_return_codes, 5);
-
-    stack_elem registers[NUMBER_OF_REGISTERS] = {};
-
+    processor proc = {};
+    stack_init(proc.st, 15);
+    stack_init(proc.functions_return_codes, 5);
+//TODO make file read and processor init in different functions
     char* input_filename = NULL;
 
     catch_processor_flags(argc, argv, &input_filename);
@@ -27,93 +25,86 @@ int main(int argc, char** argv)
     {
         color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", input_filename);
 
-        return FILE_OPEN_ERROR; //TODO I don't return enum type
+        return (int)FILE_OPEN_ERROR;
     }
 
-    size_t size = 0;
-    size_of_text(input_filename, &size);
+    size_t size_of_file = 0;
+    size_of_text(input_filename, &size_of_file);
 
-    int commands[size] = {};
+    proc.ram       = (stack_elem*)calloc(SIZE_OF_RAM, sizeof(stack_elem));
+    proc.registers = (stack_elem*)calloc(MAX_NUMBER_OF_REGISTERS, sizeof(stack_elem));
+    proc.commands  = (char*)calloc(size_of_file, sizeof(char));
 
-    fread(commands, sizeof(stack_elem), size, bin_file);
+    fread(proc.commands, sizeof(char), size_of_file, bin_file);
 
     fclose(bin_file);
 
-    bool hlt_not_found      = true;
-    size_t ip               = 0;
-    stack_elem value_of_cmd = 0;
+    bool       hlt_not_found = true;
+    stack_elem value_of_cmd  = 0;
+    size_t     ip            = 0;
     stack_elem x = 0, y = 0;
 
+//TODO make hlt not found error in assembly
     while(hlt_not_found)
     {
-        switch(commands[ip])
+        $DEBUG("%d - cmd", proc.commands[ip] & BYTE_COMMAND_MASK);
+        $DEBUG("%d - push", DISASSEMBLY_PUSH);
+        $DEBUG("%d - pop", DISASSEMBLY_POP);
+        $DEBUG("%d - add", DISASSEMBLY_ADD);
+        $DEBUG("%d - sub", DISASSEMBLY_SUB);
+        $DEBUG("%d - div", DISASSEMBLY_DIV);
+        $DEBUG("%d - mul", DISASSEMBLY_MUL);
+        $DEBUG("%d - in",  DISASSEMBLY_IN);
+        $DEBUG("%d - out", DISASSEMBLY_OUT);
+        $DEBUG("%d - call", DISASSEMBLY_CALL);
+        $DEBUG("%d - return", DISASSEMBLY_RETURN);
+        $DEBUG("%d - hlt", DISASSEMBLY_HLT);
+
+        switch(proc.commands[ip++] & BYTE_COMMAND_MASK)
         {
             case DISASSEMBLY_PUSH:
-                ip++;
-                value_of_cmd = commands[ip++];
-
-                push(st, value_of_cmd);
-
-                // printf("PUSH\n");
+                value_of_cmd = *get_arg(&proc, &ip);
+                push(proc.st, value_of_cmd);
 
                 break;
 
-            case DISASSEMBLY_PUSHR:
-                ip++;
-                value_of_cmd = registers[commands[ip++]];
-
-                push(st, value_of_cmd);
-
-                // printf("PUSHR\n");
-
-                break;
-
-            case DISASSEMBLY_POPR: //DISASSEMBLY POP DOESN'T NEED? think i can make it just print a value
-                ip++;
-                pop(st, &x);
-                registers[commands[ip++]] = x;
-
-                // printf("POPR\n");
+            case DISASSEMBLY_POP:
+                pop(proc.st, &x);
+                *get_arg(&proc, &ip) = x;
 
                 break;
 
             case DISASSEMBLY_ADD:
-                pop(st, &y); //TODO correct highlighting in pop
-                pop(st, &x);
-                push(st, x + y);
-
-                ip++;
+                pop(proc.st, &y); //TODO correct highlighting in pop
+                pop(proc.st, &x);
+                push(proc.st, x + y);
 
                 // printf("ADD\n");
 
                 break;
 
             case DISASSEMBLY_SUB:
-                pop(st, &y); //TODO correct highlighting
-                pop(st, &x);
-                push(st, x - y);
-
-                ip++;
+                pop(proc.st, &y); //TODO correct highlighting
+                pop(proc.st, &x);
+                push(proc.st, x - y);
 
                 // printf("SUB\n");
 
                 break;
 
             case DISASSEMBLY_DIV:
-                pop(st, &y); //TODO correct highlighting
-                pop(st, &x);
-                push(st, x / y);
-                ip++;
+                pop(proc.st, &y); //TODO correct highlighting
+                pop(proc.st, &x);
+                push(proc.st, x / y);
 
                 // printf("DIV\n");
 
                 break;
 
             case DISASSEMBLY_MUL:
-                pop(st, &y);
-                pop(st, &x);
-                push(st, x * y);
-                ip++;
+                pop(proc.st, &y);
+                pop(proc.st, &x);
+                push(proc.st, x * y);
 
                 // printf("MUL\n");
 
@@ -121,150 +112,177 @@ int main(int argc, char** argv)
 
             case DISASSEMBLY_IN:
                 scanf("%d", &x);
-                push(st, x);
-
-                ip++;
+                push(proc.st, x);
 
                 break;
 
             case DISASSEMBLY_OUT: //TODO make print cmd
-                pop(st, &x);
+                pop(proc.st, &x);
                 color_printf(GREEN_TEXT, BOLD, "RESULT: %d\n", x);
-
-                ip++;
 
                 break;
 
             case DISASSEMBLY_JA:
-                pop(st, &y);
-                pop(st, &x);
+                pop(proc.st, &y);
+                pop(proc.st, &x);
 
                 if(x > y)
                 {
-                    ip++;
-                    ip = commands[ip];
+                    ip = proc.commands[ip];
                 }
                 else
                 {
-                    ip++;
-                    ip++;
+                    ip += sizeof(int);
                 }
 
                 break;
 
             case DISASSEMBLY_JAE:
-                pop(st, &y);
-                pop(st, &x);
+                pop(proc.st, &y);
+                pop(proc.st, &x);
 
                 if(x >= y)
                 {
-                    ip++;
-                    ip = commands[ip];
+                    ip = proc.commands[ip];
                 }
                 else
                 {
-                    ip++;
-                    ip++;
+                    ip += sizeof(int);
                 }
 
                 break;
 
             case DISASSEMBLY_JB:
-                pop(st, &y);
-                pop(st, &x);
+                pop(proc.st, &y);
+                pop(proc.st, &x);
 
                 if(x < y)
                 {
-                    ip++;
-                    ip = commands[ip];
+                    ip = proc.commands[ip];
                 }
                 else
                 {
-                    ip++;
-                    ip++;
+                    ip += sizeof(int);
                 }
 
                 break;
 
             case DISASSEMBLY_JBE:
-                pop(st, &y);
-                pop(st, &x);
+                pop(proc.st, &y);
+                pop(proc.st, &x);
 
                 if(x <= y)
                 {
-                    ip++;
-                    ip = commands[ip];
+                    ip = proc.commands[ip];
                 }
                 else
                 {
-                    ip++;
-                    ip++;
+                    ip += sizeof(int);
                 }
 
                 break;
 
             case DISASSEMBLY_JE:
-                pop(st, &y);
-                pop(st, &x);
+                pop(proc.st, &y);
+                pop(proc.st, &x);
 
                 if(x == y)
                 {
-                    ip++;
-                    ip = commands[ip];
+                    ip = proc.commands[ip];
                 }
                 else
                 {
-                    ip++;
-                    ip++;
+                    ip += sizeof(int);
                 }
 
                 break;
 
             case DISASSEMBLY_JNE:
-                pop(st, &y);
-                pop(st, &x);
+                pop(proc.st, &y);
+                pop(proc.st, &x);
 
                 if(x != y)
                 {
-                    ip++;
-                    ip = commands[ip];
+                    ip = proc.commands[ip];
                 }
                 else
                 {
-                    ip++;
-                    ip++;
+                    ip += sizeof(int);
                 }
 
                 break;
 
             case DISASSEMBLY_JMP:
-                ip++;
-                ip = commands[ip];
+                ip = proc.commands[ip];
 
                 break;
 
             case DISASSEMBLY_CALL:
-                ip++;
-                push(functions_return_codes, ip + 1);
-                ip = commands[ip];
+                push(proc.functions_return_codes, ++ip);
+                printf("%d\n", ip);
+                scanf(&(proc.commands[ip]), &x);
+                printf("%d\n", x);
+                ip = x;
+                ip += sizeof(int);
 
                 break;
 
             case DISASSEMBLY_RETURN:
-                pop(functions_return_codes, &x);
+                pop(proc.functions_return_codes, &x);
                 ip = x;
 
                 break;
 
             case DISASSEMBLY_HLT:
-                stack_destroy(st);
+                stack_destroy(proc.st);
+                stack_destroy(proc.functions_return_codes);
+
+                free(proc.commands);
+                free(proc.ram);
+                free(proc.registers);
 
                 exit(0);
 
             default:
-                color_printf(RED_TEXT, BOLD, "Command %d doesn't found\n", commands[ip]);
+                color_printf(RED_TEXT, BOLD, "Command %d doesn't found\n", proc.commands[--ip]);
 
                 warning(false, VALUE_ERROR);
         }
     }
+}
+
+stack_elem* get_arg(processor* proc, size_t* ip)
+{
+    int format                   = (int)(proc->commands[*ip] & BYTE_FORMAT_MASK);
+    int is_reg                   = format & IS_REGISTER;
+    int is_constant              = format & IS_I_CONSTANT;
+    int memory                   = format & IS_MEMORY;
+    stack_elem* argument_address = 0;
+    stack_elem  ip_of_argument   = 0;
+    stack_elem* argument_source  = NULL;
+
+    (*ip)++;
+
+    if(memory)
+    {
+        argument_source = proc->ram;
+    }
+    else
+    {
+        argument_source = proc->registers;
+    }
+
+    if(is_reg)
+    {
+        ip_of_argument += proc->registers[proc->commands[*ip]];
+        *ip += sizeof(int);
+    }
+    if(is_constant)
+    {
+        ip_of_argument += proc->commands[*ip];
+        *ip += sizeof(int);
+    }
+    argument_source = &(argument_source[ip_of_argument]);
+
+    return argument_source;
 }

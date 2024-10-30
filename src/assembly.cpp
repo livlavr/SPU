@@ -70,7 +70,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     while(asm_commands < size_of_asm)
     {
         scan_command(*asm_commands, &cmd);
-
         $DEBUG("%s", cmd);
 
         if(!strcmp(ASSEMBLY_PUSH, cmd)) // TODO strcmp == 0

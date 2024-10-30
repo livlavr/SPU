@@ -47,26 +47,24 @@
        адреса возврата хранятся в стэке - то есть мы перед тем как уйти в функцию добавляем место возврата в стэк (он отдельный или как?)
        наверно просто при выходе из функции идти в метку
 [] побитовые операции
-[] make exception on [AX + 5] in text_processing
+[x] make exception on [AX + 5] in text_processing
 [] Bin and Asm in build
-[] make output line of ERROR and It`s prototipe in assembly
 [] do_cmd - in processor
 [] Пропуск пустых строчек
-[] После добавления оперативки нужно будет разбить индекс на два: общий индекс, индекс команд
+[] Добавить тест на то, что юзер забыл hlt
+[] Теневой регистр - нулевая ячейка массива регистров
 [] Сделать задержку между командами
 [] Добавить прыжки на индекс строки
-[] Теневой регистр - нулевая ячейка массива регистров
+[] make output line of ERROR and It`s prototipe in assembly
 [] Капитальный въеб памяти
 .
 .
 .
 [] SPU структура с массивом команд и регистров
 [] Sanitizer
-[] makefile не работает без папки build
-[] Прерывать программу при ошибке в stackOK
+[x] makefile не работает без папки build
+[] Прерывать stack при ошибке в stackOK ? или починить hash...
 [] make debug submodule
 [] NDEBUG VERSION FOR STACK
-    i think it`s even better to make ndump, ncanary, nhash ...
-
-Вопросы Максу:
-[] Как запушить изменения в сабмодули
+    i think it`s even better to make ndump, ncanary, nhash itc
+[] Запушить изменения в сабмодули

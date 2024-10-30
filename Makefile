@@ -51,7 +51,7 @@ all   :
 	make quick_assembly
 	make quick_processor
 	@printf "$(GREEN_TEXT) $(TARGET) COMPILED $(DEFAULT_TEXT)\n"
-	@$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
+	$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
 quick_assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
@@ -72,13 +72,14 @@ assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 disassembly : $(addprefix $(SRC_DIR), $(DISASSEMBLY_SRC))
 	clear
 	@mkdir -p build
-	@$(CXX) $(CFLAGS) $(DED_FLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(DISASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
 	@printf "To start an processor write:$(GREEN_TEXT) $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET)) [--input / --output] [file PATH] $(DEFAULT_TEXT)\n"
 	@printf "Do not type any flags to start processor with default settings\n"
 
 processor : $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
-	@$(CXX) $(CFLAGS) $(DED_FLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR),\
+	clear
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR),\
 	$(addprefix $(SRC_DIR), $(STACK_SRC))) -o $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 	@printf "$(GREEN_TEXT)$(PROCESSOR_TARGET) COMPILED$(DEFAULT_TEXT)\n"
 	@printf "To start an processor write:$(GREEN_TEXT) $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET)) [--input] [file PATH] $(DEFAULT_TEXT)\n"

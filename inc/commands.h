@@ -4,7 +4,7 @@
 enum CMDS_DISASSEMBLY
 {
     DISASSEMBLY_HLT    =  1 << 3, // 8
-    DISASSEMBLY_PUSH   =  2 << 3, // 16 + {1, 2, ..., 7}
+    DISASSEMBLY_PUSH   =  2 << 3, // 16
     DISASSEMBLY_POP    =  3 << 3, // 24
     DISASSEMBLY_ADD    =  4 << 3, // 32
     DISASSEMBLY_SUB    =  5 << 3, // 40
@@ -12,21 +12,19 @@ enum CMDS_DISASSEMBLY
     DISASSEMBLY_OUT    =  7 << 3, // 56
     DISASSEMBLY_MUL    =  8 << 3, // 64
     DISASSEMBLY_IN     =  9 << 3, // 72
-    DISASSEMBLY_PUSHR  = 10 << 3, // 80     //TODO delete
-    DISASSEMBLY_POPR   = 11 << 3, // 88     //TODO delete
-    DISASSEMBLY_JA     = 12 << 3, // 96
-    DISASSEMBLY_JAE    = 13 << 3, // 104
-    DISASSEMBLY_JB     = 14 << 3, // 112
-    DISASSEMBLY_JBE    = 15 << 3, // 120
-    DISASSEMBLY_JE     = 16 << 3, // 128
-    DISASSEMBLY_JNE    = 17 << 3, // 136
-    DISASSEMBLY_JMP    = 18 << 3, // 144
-    DISASSEMBLY_CALL   = 19 << 3, // 152 //Why argument is one byte
-    DISASSEMBLY_RETURN = 20 << 3, // 160
-    DISASSEMBLY_REG_AX = 21 << 3, // 168
-    DISASSEMBLY_REG_BX = 22 << 3, // 176
-    DISASSEMBLY_REG_CX = 23 << 3, // 184
-    DISASSEMBLY_REG_DX = 24 << 3  // 192
+    DISASSEMBLY_JA     = 10 << 3, // 80
+    DISASSEMBLY_JAE    = 11 << 3, // 88
+    DISASSEMBLY_JB     = 12 << 3, // 96
+    DISASSEMBLY_JBE    = 13 << 3, // 104
+    DISASSEMBLY_JE     = 14 << 3, // 112
+    DISASSEMBLY_JNE    = 15 << 3, // 120
+    DISASSEMBLY_JMP    = 16 << 3, // 128
+    DISASSEMBLY_CALL   = 17 << 3, // 136
+    DISASSEMBLY_RETURN = 18 << 3, // 144
+    DISASSEMBLY_REG_AX = 1,
+    DISASSEMBLY_REG_BX = 2,
+    DISASSEMBLY_REG_CX = 3,
+    DISASSEMBLY_REG_DX = 4
 };
 
 enum TYPE_OF_ARGUMENT // 00000MIR
@@ -63,7 +61,13 @@ static const char* ASSEMBLY_RETURN = "RETURN";
 const size_t MAX_NUMBER_OF_CMDS      = 50; //TODO delete all bad consts
 const size_t MAX_CMD_SIZE            = 15;
 const size_t MAX_NUMBER_OF_LABELS    = 10;
-const size_t NUMBER_OF_REGISTERS     = 5;
+const size_t MAX_NUMBER_OF_REGISTERS = 5;
+const size_t SIZE_OF_RAM             = 64;
+const int    BYTE_COMMAND_MASK       = 0 | 248;
+const int    BYTE_FORMAT_MASK        = 0 | 248;
+const int    IS_REGISTER             = 0 | 1;
+const int    IS_I_CONSTANT           = 0 | 2;
+const int    IS_MEMORY               = 0 | 2;
 const size_t MAX_SIZE_OF_ASM_PROGRAM = MAX_NUMBER_OF_CMDS * MAX_CMD_SIZE * 2;
 const char   LABEL_NAME_ENDING       = ':';
 
