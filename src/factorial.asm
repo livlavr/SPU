@@ -1,13 +1,26 @@
 IN
-IN
-CALL 8:
+POP AX
+CALL FACT:
+PUSH BX
 OUT
 HLT
-6:
-MUL
+
+FACT:
+    PUSH AX
+    PUSH 1
+    JNE NEXT:
+    PUSH 1
+    POP BX
 RETURN
-8:
-ADD
-PUSH 30
-CALL 6:
+
+NEXT:
+    PUSH AX
+    PUSH AX
+    PUSH 1
+    SUB
+    POP AX
+    CALL FACT:
+    PUSH BX
+    MUL
+    POP BX
 RETURN

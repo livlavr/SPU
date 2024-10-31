@@ -21,6 +21,7 @@ enum CMDS_DISASSEMBLY
     DISASSEMBLY_JMP    = 16 << 3, // 128
     DISASSEMBLY_CALL   = 17 << 3, // 136
     DISASSEMBLY_RETURN = 18 << 3, // 144
+    DISASSEMBLY_DRAW   = 19 << 3, // 152
     DISASSEMBLY_REG_AX = 1,
     DISASSEMBLY_REG_BX = 2,
     DISASSEMBLY_REG_CX = 3,
@@ -56,13 +57,15 @@ static const char* ASSEMBLY_JNE    = "JNE" ;
 static const char* ASSEMBLY_JMP    = "JMP" ;
 static const char* ASSEMBLY_CALL   = "CALL";
 static const char* ASSEMBLY_RETURN = "RETURN";
+static const char* ASSEMBLY_DRAW = "DRAW";
+
 
 
 const size_t MAX_NUMBER_OF_CMDS      = 50; //TODO delete all bad consts
 const size_t MAX_CMD_SIZE            = 15;
 const size_t MAX_NUMBER_OF_LABELS    = 10;
 const size_t MAX_NUMBER_OF_REGISTERS = 5;
-const size_t SIZE_OF_RAM             = 64;
+const size_t SIZE_OF_RAM             = 900;
 const int    BYTE_COMMAND_MASK       = 248;
 const int    BYTE_FORMAT_MASK        = 7;
 const int    IS_REGISTER             = 1;

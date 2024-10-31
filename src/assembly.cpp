@@ -196,6 +196,11 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             assembly->commands[number_of_cmd++] = DISASSEMBLY_RETURN;
             asm_commands++;
         }
+        else if(!strcmp(ASSEMBLY_DRAW, cmd))
+        {
+            assembly->commands[number_of_cmd++] = DISASSEMBLY_DRAW;
+            asm_commands++;
+        }
         else if(!strcmp(ASSEMBLY_HLT, cmd))
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_HLT;
@@ -320,7 +325,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         else
         {
                 color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't PUSH / POP this"
-                             "lement: %50[^\n]\n", **asm_commands);
+                             "element: %50[^\n]\n", **asm_commands);
                 //TODO test this shit
                 warning(false, VALUE_ERROR);
         }

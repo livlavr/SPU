@@ -60,7 +60,7 @@ TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_file
 {
     if(strcmp(argv[number_of_flag], "--input") == 0)
     {
-        size_t size_of_filename = sizeof(argv[number_of_flag + 1]) / sizeof(char);
+        size_t size_of_filename = strlen(argv[number_of_flag + 1]);
         *input_filename = (char*)calloc(size_of_filename, sizeof(char));
 
         warning(*input_filename, CALLOC_ERROR);
@@ -69,7 +69,7 @@ TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_file
     }
     else if(strcmp(argv[number_of_flag], "--output") == 0) //Consts
     {
-        size_t size_of_filename = sizeof(argv[number_of_flag + 1]) / sizeof(char);
+        size_t size_of_filename = strlen(argv[number_of_flag + 1]);
         *output_filename = (char*)calloc(size_of_filename, sizeof(char));
 
         warning(*output_filename, CALLOC_ERROR);
@@ -84,8 +84,9 @@ TYPE_OF_ERROR set_default_filename(char** filename, const char* source_filename)
 {
     size_t size_of_filename = strlen(source_filename);
     *filename = (char*)calloc(size_of_filename + 1, sizeof(char));
-    //TODO wtf strange error (didnt exist file src/assembly.asmsrc/spu_commands.bin :/)
+
     warning(*filename, CALLOC_ERROR);
+
     strcpy(*filename, source_filename);
     strcat(*filename, "\0");
 
@@ -117,7 +118,7 @@ TYPE_OF_ERROR count_cmds(char* buffer, size_t size_of_text, size_t* number_of_cm
 
     while(current_char < buffer + size_of_text)
     {
-        if(*current_char == '\n')
+        if(*current_char == '\n' && *(current_char + 1) != '\n')
         {
             (*number_of_cmds)++;
         }

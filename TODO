@@ -68,3 +68,6 @@
 [] NDEBUG VERSION FOR STACK
     i think it`s even better to make ndump, ncanary, nhash itc
 [] Запушить изменения в сабмодули
+//AX - x^2
+//BX - y^2
+//CX - y^3
