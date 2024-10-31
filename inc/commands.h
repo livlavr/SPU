@@ -63,11 +63,11 @@ const size_t MAX_CMD_SIZE            = 15;
 const size_t MAX_NUMBER_OF_LABELS    = 10;
 const size_t MAX_NUMBER_OF_REGISTERS = 5;
 const size_t SIZE_OF_RAM             = 64;
-const int    BYTE_COMMAND_MASK       = 0 | 248;
-const int    BYTE_FORMAT_MASK        = 0 | 248;
-const int    IS_REGISTER             = 0 | 1;
-const int    IS_I_CONSTANT           = 0 | 2;
-const int    IS_MEMORY               = 0 | 2;
+const int    BYTE_COMMAND_MASK       = 248;
+const int    BYTE_FORMAT_MASK        = 7;
+const int    IS_REGISTER             = 1;
+const int    IS_I_CONSTANT           = 2;
+const int    IS_MEMORY               = 4;
 const size_t MAX_SIZE_OF_ASM_PROGRAM = MAX_NUMBER_OF_CMDS * MAX_CMD_SIZE * 2;
 const char   LABEL_NAME_ENDING       = ':';
 

@@ -12,6 +12,7 @@ struct processor{
     stack_elem* registers              = NULL;
 };
 
-stack_elem* get_arg(processor* proc, size_t* ip);
+stack_elem* get_arg(processor* proc, size_t* ip, CMDS_DISASSEMBLY command,
+                    stack_elem**  constant_value);
 
 #endif

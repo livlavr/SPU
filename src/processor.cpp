@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <cstdlib>
+#include <string.h>
 
 #include "custom_asserts.h"
 #include "commands.h"
@@ -43,11 +44,12 @@ int main(int argc, char** argv)
     stack_elem value_of_cmd  = 0;
     size_t     ip            = 0;
     stack_elem x = 0, y = 0;
+    stack_elem* constant_value = (stack_elem*)calloc(1, sizeof(stack_elem));
 
 //TODO make hlt not found error in assembly
     while(hlt_not_found)
     {
-        $DEBUG("%d - cmd", proc.commands[ip] & BYTE_COMMAND_MASK);
+        printf("%d - cmd\n", proc.commands[ip] & BYTE_COMMAND_MASK);
         $DEBUG("%d - push", DISASSEMBLY_PUSH);
         $DEBUG("%d - pop", DISASSEMBLY_POP);
         $DEBUG("%d - add", DISASSEMBLY_ADD);
@@ -59,18 +61,25 @@ int main(int argc, char** argv)
         $DEBUG("%d - call", DISASSEMBLY_CALL);
         $DEBUG("%d - return", DISASSEMBLY_RETURN);
         $DEBUG("%d - hlt", DISASSEMBLY_HLT);
-
+        $DEBUG("%d - return", DISASSEMBLY_RETURN);//
+        $DEBUG("%d - reg 0", proc.registers[0]);
+        $DEBUG("%d - reg 1", proc.registers[1]);
+        $DEBUG("%d - reg 2", proc.registers[2]);
+        $DEBUG("%d - reg 3", proc.registers[3]);
+        $DEBUG("%d - reg 4", proc.registers[4]);
+        // stack_dump(proc.functions_return_codes);
         switch(proc.commands[ip++] & BYTE_COMMAND_MASK)
         {
             case DISASSEMBLY_PUSH:
-                value_of_cmd = *get_arg(&proc, &ip);
+                value_of_cmd = *get_arg(&proc, &ip, DISASSEMBLY_PUSH, &constant_value);//TODO del constant value
+                $DEBUG("%d", value_of_cmd);
                 push(proc.st, value_of_cmd);
 
                 break;
 
             case DISASSEMBLY_POP:
                 pop(proc.st, &x);
-                *get_arg(&proc, &ip) = x;
+                *get_arg(&proc, &ip, DISASSEMBLY_POP, &constant_value) = x;
 
                 break;
 
@@ -212,18 +221,20 @@ int main(int argc, char** argv)
 
                 break;
 
-            case DISASSEMBLY_JMP:
+            case DISASSEMBLY_JMP: //TODO говно
                 ip = proc.commands[ip];
+
+                ip += sizeof(int);
 
                 break;
 
             case DISASSEMBLY_CALL:
-                push(proc.functions_return_codes, ++ip);
-                printf("%d\n", ip);
-                scanf(&(proc.commands[ip]), &x);
-                printf("%d\n", x);
-                ip = x;
+                x = (int)(proc.commands[ip]);
+                // $DEBUG("%d", ip);
                 ip += sizeof(int);
+                push(proc.functions_return_codes, ip);
+                ip = x;
+                // $DEBUG("%d", ip);
 
                 break;
 
@@ -251,38 +262,82 @@ int main(int argc, char** argv)
     }
 }
 
-stack_elem* get_arg(processor* proc, size_t* ip)
+stack_elem* get_arg(processor* proc, size_t* ip, CMDS_DISASSEMBLY command,
+                    stack_elem**  constant_value)
 {
-    int format                   = (int)(proc->commands[*ip] & BYTE_FORMAT_MASK);
+    int format                   = (int)(proc->commands[(*ip) - 1] & BYTE_FORMAT_MASK);
     int is_reg                   = format & IS_REGISTER;
     int is_constant              = format & IS_I_CONSTANT;
     int memory                   = format & IS_MEMORY;
-    stack_elem* argument_address = 0;
+    stack_elem* argument_address = NULL;
     stack_elem  ip_of_argument   = 0;
     stack_elem* argument_source  = NULL;
 
-    (*ip)++;
+    printf("%d - m\n", memory);
+    printf("%d - c\n", is_constant);
+    printf("%d - r\n", is_reg);
 
-    if(memory)
+    proc->registers[0] = 0;
+    if(command == DISASSEMBLY_POP)
     {
-        argument_source = proc->ram;
+        if(memory)
+        {
+            argument_source = proc->ram;
+            if(is_reg)
+            {
+                ip_of_argument += proc->registers[(int)proc->commands[*ip]];
+                *ip += sizeof(int);
+            }
+            if(is_constant)
+            {
+                ip_of_argument += (int)proc->commands[*ip];
+                *ip += sizeof(int);
+            }
+        }
+        else
+        {
+            argument_source = proc->registers;
+            ip_of_argument += (int)proc->commands[*ip];
+            *ip += sizeof(int);
+        }
+
+        argument_address = &(argument_source[ip_of_argument]);
+
+        return argument_address;
     }
     else
     {
-        argument_source = proc->registers;
-    }
+        if(memory)
+        {
+            argument_source = proc->ram;
+            if(is_reg)
+            {
+                ip_of_argument += proc->registers[(int)proc->commands[*ip]];
+                *ip += sizeof(int);
+            }
+            if(is_constant)
+            {
+                ip_of_argument += (int)proc->commands[*ip];
+                *ip += sizeof(int);
+            }
+            argument_address = &(argument_source[ip_of_argument]);
 
-    if(is_reg)
-    {
-        ip_of_argument += proc->registers[proc->commands[*ip]];
-        *ip += sizeof(int);
-    }
-    if(is_constant)
-    {
-        ip_of_argument += proc->commands[*ip];
-        *ip += sizeof(int);
-    }
-    argument_source = &(argument_source[ip_of_argument]);
+            return argument_address;
+        }
+        else
+        {
+            if(is_reg)
+            {
+                proc->registers[0] += proc->registers[(stack_elem)proc->commands[*ip]];
+                *ip += sizeof(int);
+            }
+            if(is_constant)
+            {
+                proc->registers[0] += (stack_elem)(proc->commands[(*ip)]);
+                *ip += sizeof(int);
+            }
 
-    return argument_source;
+            return &(proc->registers[0]);
+        }
+    }
 }

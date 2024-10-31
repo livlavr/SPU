@@ -20,6 +20,8 @@ int main(int argc, char** argv)
     char* input_filename        = NULL;
     char* output_filename       = NULL;
     catch_filenames(argc, argv, &input_filename, &output_filename);
+    $DEBUG("%s", input_filename);
+    $DEBUG("%s", output_filename);
     // printf("%s\n", input_filename);
     // printf("%s", output_filename);
     fill_bin_cmds_array_bytes(input_filename,  &assembly);
@@ -31,6 +33,8 @@ int main(int argc, char** argv)
 TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array* assembly)
 {
     check_expression(assembly != NULL, POINTER_IS_NULL);
+
+    $DEBUG("%s", filename);
 
     FILE* asm_file = fopen(filename, "r");
 
@@ -207,7 +211,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
         {
             if(number_of_compilation == 0)
             {
-
                 strncpy(assembly->tags[assembly->size_of_labels_array].name, cmd, MAX_CMD_SIZE);
                 //TODO create size_t length_of_command and paste it instead of scanf
                 assembly->tags[assembly->size_of_labels_array].index_to_jmp = number_of_cmd;
@@ -503,7 +506,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
 TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array* assembly) //TODO create file ifdoesn't exist
 {
     check_expression(assembly != NULL, POINTER_IS_NULL);
-
+    $DEBUG("%s", filename);
     FILE* bin = fopen(filename, "wb");
 
     if(bin == NULL)
