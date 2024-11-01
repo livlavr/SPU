@@ -55,6 +55,7 @@
 [] Sanitizer
 [x] makefile не работает без папки build
 [] Прерывать stack при ошибке в stackOK ? или починить hash
+[] merge branches
 [] make debug submodule
 [] NDEBUG VERSION FOR STACK
     i think it`s even better to make ndump, ncanary, nhash itc
