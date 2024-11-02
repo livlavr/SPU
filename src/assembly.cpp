@@ -10,9 +10,7 @@
 #include "text_processing.h"
 #include "debug_macros.h"
 
-//TODO Static library .a
-//TODO Difference between static and dynamic libraries - read about it
-//TODO How to make good submodule .h
+//TODO Static library
 
 int main(int argc, char** argv)
 {
@@ -25,7 +23,7 @@ int main(int argc, char** argv)
     // printf("%s\n", input_filename);
     // printf("%s", output_filename);
     fill_bin_cmds_array_bytes(input_filename,  &assembly);
-    output_cmds_to_bin (output_filename, &assembly);
+    output_cmds_to_bin(output_filename, &assembly);
 
     return 0;
 }
