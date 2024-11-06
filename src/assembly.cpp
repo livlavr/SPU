@@ -65,6 +65,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     int    number_of_cmd         = 0;
     int    value_of_cmd          = 0;
     int    is_number             = 0;
+    int    is_hlt                = 0;
     int    number_of_compilation = 0;
     char** begin_of_asm_commands = asm_commands;
     char** size_of_asm           = begin_of_asm_commands + assembly->size_of_commands_array - 1;
@@ -206,6 +207,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
         }
         else if(strcmp(ASSEMBLY_HLT, cmd) == 0)
         {
+            is_hlt = 1;
             assembly->commands[number_of_cmd++] = DISASSEMBLY_HLT;
             asm_commands++;
         }
@@ -249,10 +251,16 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             memset(cmd, 0, MAX_CMD_SIZE); //TODO free; cmd = NULL;
         }
     }
+    if(is_hlt == 0)
+    {
+        color_printf(RED_TEXT, BOLD, "Syntax error in assembly: there's no \"HLT\" command in program.\n");
+
+        warning(false, INPUT_ERROR);
+    }
     assembly->size_of_commands_array = number_of_cmd;
     fclose(asm_file);
     //TODO find place to free cmd
-    //BUG but it'll be very slow...?
+    //TODO but it'll be very slow...?
 
     return SUCCESS;
 }
