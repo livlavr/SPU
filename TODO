@@ -46,13 +46,13 @@
 [x] make exception on [AX + 5] in text_processing
 [x] Bin and Asm in build
 [x] Пропуск пустых строчек
-[] Добавить тест на то, что юзер забыл hlt
+[x] Добавить тест на то, что юзер забыл hlt
 [] Start with Ded flags
 [x] Теневой регистр - нулевая ячейка массива регистров
 [x] Сделать задержку между командами
 [] make output line of ERROR and It`s prototipe in assembly
 [] Капитальный въеб памяти
-[] strcmp из онегина
+[] strcmp из онегина?
 [] code generator
 [x] SPU структура с массивом команд и регистров
 [] Sanitizer

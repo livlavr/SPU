@@ -52,7 +52,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     fread(buffer, sizeof(char), size_of_buffer, asm_file);
     count_cmds(buffer, size_of_buffer, &(assembly->size_of_commands_array));
 
-    char cmd[MAX_CMD_SIZE] = "";
 
     char** asm_commands = (char**)calloc(assembly->size_of_commands_array, sizeof(char*));
     warning(asm_commands, CALLOC_ERROR);
@@ -67,6 +66,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     int    is_number             = 0;
     int    is_hlt                = 0;
     int    number_of_compilation = 0;
+    char   cmd[MAX_CMD_SIZE]     = "";
     char** begin_of_asm_commands = asm_commands;
     char** size_of_asm           = begin_of_asm_commands + assembly->size_of_commands_array - 1;
 
@@ -222,7 +222,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             if(number_of_compilation == 0)
             {
                 strncpy(assembly->tags[assembly->size_of_labels_array].name, cmd, MAX_CMD_SIZE);
-                //TODO create size_t length_of_command and paste it instead of scanf
                 assembly->tags[assembly->size_of_labels_array].index_to_jmp = number_of_cmd;
                 (assembly->size_of_labels_array)++;
             }
@@ -478,8 +477,8 @@ TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd,
 
 TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, char*** asm_commands)
 {
-    check_expression(assembly,      POINTER_IS_NULL);
-    check_expression(asm_commands,           POINTER_IS_NULL);
+    check_expression(assembly,     POINTER_IS_NULL);
+    check_expression(asm_commands, POINTER_IS_NULL);
 
     size_t index_of_label = 0;
     char** begin_of_cmd   = *asm_commands;
@@ -491,6 +490,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     scan_command(**asm_commands, cmd);
     *asm_commands = begin_of_cmd;
 
+    strcat(cmd, ":");
     if(cmd[strlen(cmd) - 1] == LABEL_NAME_ENDING)
     {
         for(index_of_label = 0; index_of_label < assembly->size_of_labels_array; index_of_label++)

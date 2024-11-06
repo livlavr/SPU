@@ -91,24 +91,11 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
                 break;
 
-            case DISASSEMBLY_PUSHR:
-                number_of_cmd++;
-                process_register(ASSEMBLY_PUSH, disassembly, &number_of_cmd, bin_commands[number_of_cmd]);
-                // printf("%s", disassembly->commands);
-                break;
-
             case DISASSEMBLY_POP:
                 strcat(disassembly->commands, ASSEMBLY_POP);
                 strcat(disassembly->commands, "\n");
                 // printf("%s", disassembly->commands);
                 number_of_cmd++;
-
-                break;
-
-            case DISASSEMBLY_POPR:
-                number_of_cmd++;
-                process_register(ASSEMBLY_POP, disassembly, &number_of_cmd, bin_commands[number_of_cmd]);
-                // printf("%s", disassembly->commands);
 
                 break;
 

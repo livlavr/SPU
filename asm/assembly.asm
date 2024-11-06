@@ -1,4 +1,7 @@
 PUSH 4
+CALL HUI
 SQRT
 OUT
-HLT
+HUI:
+    OUT
+    HLT
