@@ -50,9 +50,8 @@
 [x] Сделать задержку между командами
 [] make output line of ERROR and It`s prototipe in assembly
 [] Капитальный въеб памяти
-.
-.
-.
+[] strcmp из онегина
+[] code generator
 [x] SPU структура с массивом команд и регистров
 [] Sanitizer
 [x] makefile не работает без папки build

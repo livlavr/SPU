@@ -102,6 +102,11 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             assembly->commands[number_of_cmd++] = DISASSEMBLY_MUL;
             asm_commands++;
         }
+        else if(!strcmp(ASSEMBLY_SQRT, cmd))
+        {
+            assembly->commands[number_of_cmd++] = DISASSEMBLY_SQRT;
+            asm_commands++;
+        }
         else if(!strcmp(ASSEMBLY_IN, cmd))
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_IN;

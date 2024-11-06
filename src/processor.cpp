@@ -122,6 +122,14 @@ int main(int argc, char** argv)
 
                 break;
 
+            case DISASSEMBLY_SQRT:
+                pop(proc.st, &x);
+                push(proc.st, (int)sqrt(x));
+
+                // printf("SQRT\n");
+
+                break;
+
             case DISASSEMBLY_IN:
                 scanf("%d", &x);
                 push(proc.st, x);

@@ -22,6 +22,7 @@ enum CMDS_DISASSEMBLY
     DISASSEMBLY_CALL   = 17 << 3, // 136
     DISASSEMBLY_RETURN = 18 << 3, // 144
     DISASSEMBLY_DRAW   = 19 << 3, // 152
+    DISASSEMBLY_SQRT   = 20 << 3, // 160
     DISASSEMBLY_REG_AX = 1,
     DISASSEMBLY_REG_BX = 2,
     DISASSEMBLY_REG_CX = 3,
@@ -58,6 +59,7 @@ static const char* ASSEMBLY_JMP    = "JMP" ;
 static const char* ASSEMBLY_CALL   = "CALL";
 static const char* ASSEMBLY_RETURN = "RETURN";
 static const char* ASSEMBLY_DRAW = "DRAW";
+static const char* ASSEMBLY_SQRT = "SQRT";
 
 
 
