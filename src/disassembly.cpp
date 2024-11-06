@@ -400,7 +400,7 @@ TYPE_OF_ERROR process_register(const char* command, disassembly_cmd_array* disas
 
 TYPE_OF_ERROR output_cmds_to_asm(const char* filename, const disassembly_cmd_array* disassembly)
 {
-    check_expression(disassembly != NULL, POINTER_IS_NULL);
+    check_expression(disassembly, POINTER_IS_NULL);
 
     FILE* asm_file = fopen(filename, "w");
 

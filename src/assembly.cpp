@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 
 TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array* assembly)
 {
-    check_expression(assembly != NULL, POINTER_IS_NULL);
+    check_expression(assembly, POINTER_IS_NULL);
 
     $DEBUG("%s", filename);
 
@@ -74,50 +74,50 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
         scan_command(*asm_commands, &cmd);
         $DEBUG("%s", cmd);
 
-        if(!strcmp(ASSEMBLY_PUSH, cmd)) // TODO strcmp == 0
+        if(strcmp(ASSEMBLY_PUSH, cmd) == 0) // TODO strcmp == 0
         {
             create_cmd_description(assembly, &asm_commands, &number_of_cmd, DISASSEMBLY_PUSH);//TODO rename
         }
-        else if(!strcmp(ASSEMBLY_POP, cmd))
+        else if(strcmp(ASSEMBLY_POP, cmd) == 0)
         {
             create_cmd_description(assembly, &asm_commands, &number_of_cmd, DISASSEMBLY_POP);
         }
-        else if(!strcmp(ASSEMBLY_ADD, cmd))
+        else if(strcmp(ASSEMBLY_ADD, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_ADD;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_SUB, cmd))
+        else if(strcmp(ASSEMBLY_SUB, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_SUB;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_DIV, cmd))
+        else if(strcmp(ASSEMBLY_DIV, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_DIV;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_MUL, cmd))
+        else if(strcmp(ASSEMBLY_MUL, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_MUL;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_SQRT, cmd))
+        else if(strcmp(ASSEMBLY_SQRT, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_SQRT;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_IN, cmd))
+        else if(strcmp(ASSEMBLY_IN, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_IN;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_OUT, cmd))
+        else if(strcmp(ASSEMBLY_OUT, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_OUT;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_JA, cmd))
+        else if(strcmp(ASSEMBLY_JA, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JA;
 
@@ -126,7 +126,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             asm_commands++;
             number_of_cmd += (int)sizeof(int);
         }
-        else if(!strcmp(ASSEMBLY_JAE, cmd))
+        else if(strcmp(ASSEMBLY_JAE, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JAE;
 
@@ -136,7 +136,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             number_of_cmd += (int)sizeof(int);
 
         }
-        else if(!strcmp(ASSEMBLY_JB, cmd))
+        else if(strcmp(ASSEMBLY_JB, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JB;
 
@@ -146,7 +146,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             number_of_cmd += (int)sizeof(int);
 
         }
-        else if(!strcmp(ASSEMBLY_JBE, cmd))
+        else if(strcmp(ASSEMBLY_JBE, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JBE;
 
@@ -156,7 +156,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             number_of_cmd += (int)sizeof(int);
 
         }
-        else if(!strcmp(ASSEMBLY_JE, cmd))
+        else if(strcmp(ASSEMBLY_JE, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JE;
 
@@ -166,7 +166,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             number_of_cmd += (int)sizeof(int);
 
         }
-        else if(!strcmp(ASSEMBLY_JNE, cmd))
+        else if(strcmp(ASSEMBLY_JNE, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JNE;
 
@@ -176,7 +176,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             number_of_cmd += (int)sizeof(int);
 
         }
-        else if(!strcmp(ASSEMBLY_JMP, cmd))
+        else if(strcmp(ASSEMBLY_JMP, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_JMP;
 
@@ -185,7 +185,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             asm_commands++;
             number_of_cmd += (int)sizeof(int);
         }
-        else if(!strcmp(ASSEMBLY_CALL, cmd))
+        else if(strcmp(ASSEMBLY_CALL, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_CALL;
 
@@ -194,17 +194,17 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             asm_commands++;
             number_of_cmd += (int)sizeof(int);
         }
-        else if(!strcmp(ASSEMBLY_RETURN, cmd))
+        else if(strcmp(ASSEMBLY_RETURN, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_RETURN;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_DRAW, cmd))
+        else if(strcmp(ASSEMBLY_DRAW, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_DRAW;
             asm_commands++;
         }
-        else if(!strcmp(ASSEMBLY_HLT, cmd))
+        else if(strcmp(ASSEMBLY_HLT, cmd) == 0)
         {
             assembly->commands[number_of_cmd++] = DISASSEMBLY_HLT;
             asm_commands++;
@@ -442,19 +442,19 @@ TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd,
     check_expression(number_of_cmd, POINTER_IS_NULL);
     check_expression(register_value,POINTER_IS_NULL);
 
-    if(!strcmp(register_value, ASSEMBLY_REG_AX))
+    if(strcmp(register_value, ASSEMBLY_REG_AX) == 0)
     {
         assembly->commands[(*number_of_cmd)] |= DISASSEMBLY_REG_AX;
     }
-    else if(!strcmp(register_value, ASSEMBLY_REG_BX))
+    else if(strcmp(register_value, ASSEMBLY_REG_BX) == 0)
     {
         assembly->commands[(*number_of_cmd)] |= DISASSEMBLY_REG_BX;
     }
-    else if(!strcmp(register_value, ASSEMBLY_REG_CX))
+    else if(strcmp(register_value, ASSEMBLY_REG_CX) == 0)
     {
         assembly->commands[(*number_of_cmd)] |= DISASSEMBLY_REG_CX;
     }
-    else if(!strcmp(register_value, ASSEMBLY_REG_DX))
+    else if(strcmp(register_value, ASSEMBLY_REG_DX) == 0)
     {
         assembly->commands[(*number_of_cmd)] |= DISASSEMBLY_REG_DX;
     }
@@ -487,7 +487,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     {
         for(index_of_label = 0; index_of_label < assembly->size_of_labels_array; index_of_label++)
         {
-            if(!strcmp(cmd, assembly->tags[index_of_label].name))
+            if(strcmp(cmd, assembly->tags[index_of_label].name) == 0)
             {
                 memcpy(&(assembly->commands[number_of_cmd]), &(assembly->tags[index_of_label].index_to_jmp), sizeof(int));
 
@@ -513,7 +513,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
 
 TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array* assembly) //TODO create file ifdoesn't exist
 {
-    check_expression(assembly != NULL, POINTER_IS_NULL);
+    check_expression(assembly, POINTER_IS_NULL);
     $DEBUG("%s", filename);
     FILE* bin = fopen(filename, "wb");
 
