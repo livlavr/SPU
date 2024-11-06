@@ -9,6 +9,12 @@
 #include "text_processing.h"
 #include "commands.h"
 
+static const char assembly_source[]       = "src/assembly.cpp";
+static const char processor_source[]      = "src/processor.cpp";
+
+static const char default_assembly_file[] = "asm/assembly.asm";
+static const char default_bin_file[]      = "bin/spu_commands.bin";
+
 TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
                              char** output_filename, const char* source_filename)
 {
@@ -22,33 +28,33 @@ TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
         process_flag(3, argv, input_filename, output_filename);
     }
 
-    if(strcmp(source_filename, "src/assembly.cpp") == 0) //TODO make source consts
+    if(strcmp(source_filename, assembly_source) == 0) //TODO make source consts
     {
         if(*input_filename == NULL)
         {
-            set_default_filename(input_filename, "src/assembly.asm");
+            set_default_filename(input_filename, default_assembly_file);
         }
         if(*output_filename == NULL)
         {
-            set_default_filename(output_filename, "src/spu_commands.bin");
+            set_default_filename(output_filename, default_bin_file);
         }
     }
-    else if(strcmp(source_filename, "src/processor.cpp") == 0)
+    else if(strcmp(source_filename, processor_source) == 0)
     {
         if(*input_filename == NULL)
         {
-            set_default_filename(input_filename, "src/spu_commands.bin");
+            set_default_filename(input_filename, default_bin_file);
         }
     }
     else
     {
         if(*input_filename == NULL)
         {
-            set_default_filename(input_filename, "src/spu_commands.bin");
+            set_default_filename(input_filename, default_bin_file);
         }
         if(*output_filename == NULL)
         {
-            set_default_filename(output_filename, "src/assembly.asm");
+            set_default_filename(output_filename, default_assembly_file);
         }
     }
 

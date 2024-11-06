@@ -75,8 +75,8 @@ int main(int argc, char** argv)
                 value_of_cmd = *get_arg(&proc, &ip, DISASSEMBLY_PUSH, &shift);//TODO del constant value
                 // $DEBUG("%d", value_of_cmd);
                 push(proc.st, value_of_cmd);
-                printf("%d\n", proc.ram[0]);
-                printf("%d\n", proc.ram[1]);
+                $DEBUG("%d", proc.ram[0]);
+                $DEBUG("%d", proc.ram[1]);
 
                 break;
 
