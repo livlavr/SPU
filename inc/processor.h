@@ -12,8 +12,7 @@ struct processor{
     stack_elem* registers              = NULL;
 };
 
-stack_elem* get_arg(processor* proc, int* ip, CMDS_DISASSEMBLY command,
-                    int**  shift);
-TYPE_OF_ERROR draw(processor* proc);
+stack_elem* get_arg(processor* proc, int* ip, CMDS_DISASSEMBLY command, int**  shift);
+TYPE_OF_ERROR draw (processor* proc);
 
 #endif

@@ -58,8 +58,8 @@ static const char* ASSEMBLY_JNE    = "JNE" ;
 static const char* ASSEMBLY_JMP    = "JMP" ;
 static const char* ASSEMBLY_CALL   = "CALL";
 static const char* ASSEMBLY_RETURN = "RETURN";
-static const char* ASSEMBLY_DRAW = "DRAW";
-static const char* ASSEMBLY_SQRT = "SQRT";
+static const char* ASSEMBLY_DRAW   = "DRAW";
+static const char* ASSEMBLY_SQRT   = "SQRT";
 
 
 

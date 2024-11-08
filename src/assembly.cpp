@@ -18,10 +18,10 @@ int main(int argc, char** argv)
     char* input_filename        = NULL;
     char* output_filename       = NULL;
     catch_filenames(argc, argv, &input_filename, &output_filename);
+
     $DEBUG("%s", input_filename);
     $DEBUG("%s", output_filename);
-    // printf("%s\n", input_filename);
-    // printf("%s", output_filename);
+
     fill_bin_cmds_array_bytes(input_filename,  &assembly);
     output_cmds_to_bin(output_filename, &assembly);
 
@@ -428,7 +428,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
     return SUCCESS;
 }
 
-bool find_elem(char* elem, labels* array, int size_of_array)
+inline bool find_elem(char* elem, labels* array, int size_of_array)
 {
     for(int index = 0; index < size_of_array; index++)
     {
@@ -489,30 +489,20 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     //TODO also in create_cmd_description
     scan_command(**asm_commands, cmd);
     *asm_commands = begin_of_cmd;
-
-    strcat(cmd, ":");
-    if(cmd[strlen(cmd) - 1] == LABEL_NAME_ENDING)
+    for(index_of_label = 0; index_of_label < assembly->size_of_labels_array; index_of_label++)
     {
-        for(index_of_label = 0; index_of_label < assembly->size_of_labels_array; index_of_label++)
+        if(strcmp(cmd, assembly->tags[index_of_label].name) == 0)
         {
-            if(strcmp(cmd, assembly->tags[index_of_label].name) == 0)
-            {
-                memcpy(&(assembly->commands[number_of_cmd]), &(assembly->tags[index_of_label].index_to_jmp), sizeof(int));
+            memcpy(&(assembly->commands[number_of_cmd]), &(assembly->tags[index_of_label].index_to_jmp), sizeof(int));
 
-                $DEBUG("%d", assembly->commands[number_of_cmd]);
+            $DEBUG("%d", assembly->commands[number_of_cmd]);
 
-                break;
-            }
-        }
-        if(index_of_label == assembly->size_of_labels_array)
-        {
-            color_printf(RED_TEXT, BOLD, "This label doesn't exist: %s\n", cmd);
-            warning(false, VALUE_ERROR);
+            break;
         }
     }
-    else
+    if(index_of_label == assembly->size_of_labels_array)
     {
-        color_printf(RED_TEXT, BOLD, "Bad label \"%s\", it should end's on \":\"\n", cmd);
+        color_printf(RED_TEXT, BOLD, "This label doesn't exist: %s\n", cmd);
         warning(false, VALUE_ERROR);
     }
 

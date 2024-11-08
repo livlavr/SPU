@@ -9,11 +9,11 @@
 #include "text_processing.h"
 #include "commands.h"
 
-static const char assembly_source[]       = "src/assembly.cpp";
-static const char processor_source[]      = "src/processor.cpp";
+static const char assembly_source      [] = "src/assembly.cpp";
+static const char processor_source     [] = "src/processor.cpp";
 
 static const char default_assembly_file[] = "asm/assembly.asm";
-static const char default_bin_file[]      = "bin/spu_commands.bin";
+static const char default_bin_file     [] = "bin/spu_commands.bin";
 
 TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
                              char** output_filename, const char* source_filename)
@@ -67,7 +67,7 @@ TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_file
     if(strcmp(argv[number_of_flag], "--input") == 0)
     {
         size_t size_of_filename = strlen(argv[number_of_flag + 1]);
-        *input_filename = (char*)calloc(size_of_filename, sizeof(char));
+        *input_filename         = (char*)calloc(size_of_filename, sizeof(char));
 
         warning(*input_filename, CALLOC_ERROR);
 
@@ -76,7 +76,7 @@ TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_file
     else if(strcmp(argv[number_of_flag], "--output") == 0) //Consts
     {
         size_t size_of_filename = strlen(argv[number_of_flag + 1]);
-        *output_filename = (char*)calloc(size_of_filename, sizeof(char));
+        *output_filename        = (char*)calloc(size_of_filename, sizeof(char));
 
         warning(*output_filename, CALLOC_ERROR);
 
@@ -89,7 +89,7 @@ TYPE_OF_ERROR process_flag(size_t number_of_flag, char** argv, char** input_file
 TYPE_OF_ERROR set_default_filename(char** filename, const char* source_filename)
 {
     size_t size_of_filename = strlen(source_filename);
-    *filename = (char*)calloc(size_of_filename + 1, sizeof(char));
+    *filename               = (char*)calloc(size_of_filename + 1, sizeof(char));
 
     warning(*filename, CALLOC_ERROR);
 
@@ -140,8 +140,8 @@ TYPE_OF_ERROR fill_commands(char* buffer, size_t number_of_cmds, char** asm_comm
     check_expression(buffer,       POINTER_IS_NULL);
     check_expression(asm_commands, POINTER_IS_NULL);
 
-    size_t number_of_line = 0;
-    char* current_char    = buffer;
+    size_t number_of_line        = 0;
+    char* current_char           = buffer;
     asm_commands[number_of_line] = current_char;
     number_of_line++;
 

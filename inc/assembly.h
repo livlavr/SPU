@@ -18,12 +18,12 @@ struct assembly_cmd_array
 };
 
 TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array* assembly);
-TYPE_OF_ERROR output_cmds_to_bin (const char* filename, const assembly_cmd_array* assembly);
-TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd, char* register_value);
-TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, char*** asm_commands);
-bool          find_elem(char* elem, labels* array, int size_of_array);
-TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_commands,
-                                     int* number_of_cmd, CMDS_DISASSEMBLY disassembly_cmd);
+TYPE_OF_ERROR output_cmds_to_bin       (const char* filename, const assembly_cmd_array* assembly);
+TYPE_OF_ERROR process_register         (assembly_cmd_array* assembly, int* number_of_cmd, char* register_value);
+TYPE_OF_ERROR process_label            (assembly_cmd_array* assembly, int number_of_cmd, char*** asm_commands);
+inline bool   find_elem                (char* elem, labels* array, int size_of_array);
+TYPE_OF_ERROR create_cmd_description   (assembly_cmd_array* assembly, char*** asm_commands,
+                                        int* number_of_cmd, CMDS_DISASSEMBLY disassembly_cmd);
 
 #define scan_command(buffer, cmd) sscanf(buffer, "%14s", cmd) //TODO calloc %n and sscanf :)
 
