@@ -27,7 +27,7 @@ int main(int argc, char** argv) // TODO why are you writing all in main
 
     if(bin_file == NULL)
     {
-        color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", input_filename);
+        color_printf(RED_COLOR, BOLD, "File with %s name doesn't exist\n", input_filename);
 
         return (int)FILE_OPEN_ERROR;
     }
@@ -256,7 +256,7 @@ int main(int argc, char** argv) // TODO why are you writing all in main
                 exit(0); // TODO do not use exit
 
             default:
-                color_printf(RED_TEXT, BOLD, "Command %d doesn't found\n", proc.commands[--ip]);
+                color_printf(RED_COLOR, BOLD, "Command %d doesn't found\n", proc.commands[--ip]);
 
                 customAssert(false, VALUE_ERROR);
         }

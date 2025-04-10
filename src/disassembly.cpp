@@ -267,7 +267,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
 
                 break;
             default:
-                color_printf(RED_TEXT, BOLD, "%d\n", bin_commands[number_of_cmd]);
+                color_printf(RED_COLOR, BOLD, "%d\n", bin_commands[number_of_cmd]);
 
                 customAssert(false, VALUE_ERROR);
         }
@@ -379,7 +379,7 @@ TYPE_OF_ERROR process_register(const char* command, disassembly_cmd_array* disas
 
             break;
         default :
-            color_printf(RED_TEXT, BOLD, "Not a register: %d\n", cmd);
+            color_printf(RED_COLOR, BOLD, "Not a register: %d\n", cmd);
             customAssert(false, VALUE_ERROR);
     }
 
@@ -394,7 +394,7 @@ TYPE_OF_ERROR output_cmds_to_asm(const char* filename, const disassembly_cmd_arr
 
     if(asm_file == NULL)
     {
-        color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\number", filename); //TODO rename enum
+        color_printf(RED_COLOR, BOLD, "File with %s name doesn't exist\number", filename); //TODO rename enum
 
         return FILE_OPEN_ERROR;
     }

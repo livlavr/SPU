@@ -39,7 +39,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
 
     if(asm_file == NULL)
     {
-        color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", filename);
+        color_printf(RED_COLOR, BOLD, "File with %s name doesn't exist\n", filename);
 
         customAssert(false, FILE_OPEN_ERROR);
     }
@@ -214,7 +214,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
         }
         else if(find_elem(cmd, assembly->tags, assembly->size_of_labels_array) && number_of_compilation == 0)
         {
-            color_printf(RED_TEXT, BOLD, "Syntax error in assembly: Duplicate \"%s\" label.\n", cmd);
+            color_printf(RED_COLOR, BOLD, "Syntax error in assembly: Duplicate \"%s\" label.\n", cmd);
 
             customAssert(false, VALUE_ERROR);
         }
@@ -230,8 +230,8 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
         }
         else
         {
-            color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't find \"%s\" command.\n", cmd);
-            color_printf(RED_TEXT, BOLD, "Command wrong or too long, MAX_CMD_SIZE = %lu\n", MAX_CMD_SIZE);
+            color_printf(RED_COLOR, BOLD, "Syntax error in assembly: can't find \"%s\" command.\n", cmd);
+            color_printf(RED_COLOR, BOLD, "Command wrong or too long, MAX_CMD_SIZE = %lu\n", MAX_CMD_SIZE);
 
             customAssert(false, VALUE_ERROR);
         }
@@ -253,7 +253,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     }
     if(is_hlt == 0)
     {
-        color_printf(RED_TEXT, BOLD, "Syntax error in assembly: there's no \"HLT\" command in program.\n");
+        color_printf(RED_COLOR, BOLD, "Syntax error in assembly: there's no \"HLT\" command in program.\n");
 
         customAssert(false, INPUT_ERROR);
     }
@@ -335,7 +335,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         }
         else
         {
-                color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't PUSH / POP this"
+                color_printf(RED_COLOR, BOLD, "Syntax error in assembly: can't PUSH / POP this"
                              "element: %50[^\n]\n", **asm_commands);
                 //TODO test this shit
                 customAssert(false, VALUE_ERROR);
@@ -351,7 +351,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         }
         else
         {
-            color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't POP this"
+            color_printf(RED_COLOR, BOLD, "Syntax error in assembly: can't POP this"
                          "element: \"%50[^\n]\".\n", register_value);
 
             customAssert(false, VALUE_ERROR);
@@ -411,7 +411,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         }
         else
         {
-                color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't PUSH this"
+                color_printf(RED_COLOR, BOLD, "Syntax error in assembly: can't PUSH this"
                              "element: \"%50[^\n]\".\n", **asm_commands);
                 //TODO test this shit
                 customAssert(false, VALUE_ERROR);
@@ -468,7 +468,7 @@ TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd,
     }
     else
     {
-        color_printf(RED_TEXT, BOLD, "Wrong argument: %s\n", register_value);
+        color_printf(RED_COLOR, BOLD, "Wrong argument: %s\n", register_value);
 
         customAssert(false, VALUE_ERROR);
     }
@@ -504,7 +504,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     }
     if(index_of_label == assembly->size_of_labels_array)
     {
-        color_printf(RED_TEXT, BOLD, "This label doesn't exist: %s\n", cmd);
+        color_printf(RED_COLOR, BOLD, "This label doesn't exist: %s\n", cmd);
         customAssert(false, VALUE_ERROR);
     }
 
@@ -519,7 +519,7 @@ TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array*
 
     if(bin == NULL)
     {
-        color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", filename); //TODO rename enum
+        color_printf(RED_COLOR, BOLD, "File with %s name doesn't exist\n", filename); //TODO rename enum
 
         return FILE_OPEN_ERROR;
     }
