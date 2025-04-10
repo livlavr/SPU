@@ -11,12 +11,12 @@ DISASSEMBLY_TARGET = disassembly
 PROCESSOR_SRC      = processor.cpp text_processing.cpp
 PROCESSOR_TARGET   = processor
 
-SUBMODULE_SRC      = Custom-asserts/Color/color_printf.cpp #TODO stack compiling
+SUBMODULE_SRC      = Color-printf/color_printf.cpp
 
 BUILD_DIR    = ./build/
 SRC_DIR      = ./src/
 STACK_DIR    = ./Stack/
-CFLAGS       = -I inc -I Custom-asserts -I Custom-asserts/Color -I Stack/inc -I Stack/Color-printf
+CFLAGS       = -I inc -I Custom-asserts -I Custom-asserts -I Stack/inc -I Color-printf
 
 TARGET       = SPU
 OBJECT       = $(patsubst %.cpp, %.o, $(SRC))

@@ -13,7 +13,7 @@
 static const char assembly_source      [] = "src/assembly.cpp";
 static const char processor_source     [] = "src/processor.cpp";
 
-static const char default_assembly_file[] = "asm/assembly.asm";
+static const char default_assembly_file[] = "AssemblyExamples/assembly.asm";
 static const char default_bin_file     [] = "bin/spu_commands.bin";
 
 TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,

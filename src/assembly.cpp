@@ -337,7 +337,6 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         {
                 color_printf(RED_COLOR, BOLD, "Syntax error in assembly: can't PUSH / POP this"
                              "element: %50[^\n]\n", **asm_commands);
-                //TODO test this shit
                 customAssert(false, VALUE_ERROR);
         }
     }
