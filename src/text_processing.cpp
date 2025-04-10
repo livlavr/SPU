@@ -16,7 +16,7 @@ static const char default_assembly_file[] = "asm/assembly.asm";
 static const char default_bin_file     [] = "bin/spu_commands.bin";
 
 TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
-                             char** output_filename, const char* source_filename)
+                                char** output_filename, const char* source_filename)
 {
     if(argc == 3)
     {
@@ -28,7 +28,7 @@ TYPE_OF_ERROR process_filenames(int argc, char** argv, char** input_filename,
         process_flag(3, argv, input_filename, output_filename);
     }
 
-    if(strcmp(source_filename, assembly_source) == 0) //TODO make source consts
+    if(strcmp(source_filename, assembly_source) == 0)
     {
         if(*input_filename == NULL)
         {

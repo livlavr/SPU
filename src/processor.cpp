@@ -12,12 +12,12 @@
 #include "processor.h"
 #include "debug_macros.h"
 
-int main(int argc, char** argv)
+int main(int argc, char** argv) // TODO why are you writing all in main
 {
-    processor proc = {};
+    processor proc = {}; // TODO proc ctor
     stack_init(proc.st, 15);
     stack_init(proc.functions_return_codes, 5);
-//TODO make file read and processor init in different functions
+//TODO make file read and processor init in different functions (fuck you)
     char* input_filename = NULL;
 
     catch_processor_flags(argc, argv, &input_filename);
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     size_t size_of_file = 0;
     size_of_text(input_filename, &size_of_file);
 
-    proc.ram       = (stack_elem*)calloc(SIZE_OF_RAM, sizeof(stack_elem));
+    proc.ram       = (stack_elem*)calloc(SIZE_OF_RAM, sizeof(stack_elem)); // TODO CTOR
     proc.registers = (stack_elem*)calloc(MAX_NUMBER_OF_REGISTERS, sizeof(stack_elem));
     proc.commands  = (char*)calloc(size_of_file, sizeof(char));
 
@@ -51,29 +51,11 @@ int main(int argc, char** argv)
 //TODO make hlt not found error in assembly
     while(hlt_not_found)
     {
-        // printf("%d - cmd\n", proc.commands[ip] & BYTE_COMMAND_MASK);
-        // $DEBUG("%d - push", DISASSEMBLY_PUSH);
-        // $DEBUG("%d - pop", DISASSEMBLY_POP);
-        // $DEBUG("%d - add", DISASSEMBLY_ADD);
-        // $DEBUG("%d - sub", DISASSEMBLY_SUB);
-        // $DEBUG("%d - div", DISASSEMBLY_DIV);
-        // $DEBUG("%d - mul", DISASSEMBLY_MUL);
-        // $DEBUG("%d - in",  DISASSEMBLY_IN);
-        // $DEBUG("%d - out", DISASSEMBLY_OUT);
-        // $DEBUG("%d - call", DISASSEMBLY_CALL);
-        // $DEBUG("%d - return", DISASSEMBLY_RETURN);
-        // $DEBUG("%d - hlt", DISASSEMBLY_HLT);
-        // $DEBUG("%d - reg 0", proc.registers[0]);
-        // $DEBUG("%d - reg 1", proc.registers[1]);
-        // $DEBUG("%d - reg 2", proc.registers[2]);
-        // $DEBUG("%d - reg 3", proc.registers[3]);
-        // $DEBUG("%d - reg 4", proc.registers[4]);
         stack_dump(proc.st);
         switch(proc.commands[ip++] & BYTE_COMMAND_MASK)
         {
             case DISASSEMBLY_PUSH:
                 value_of_cmd = *get_arg(&proc, &ip, DISASSEMBLY_PUSH, &shift);//TODO del constant value
-                // $DEBUG("%d", value_of_cmd);
                 push(proc.st, value_of_cmd);
                 $DEBUG("%d", proc.ram[0]);
                 $DEBUG("%d", proc.ram[1]);
@@ -86,12 +68,11 @@ int main(int argc, char** argv)
 
                 break;
 
+            // TODO define DISASSEMBLY_ARITHM(ADD, +)
             case DISASSEMBLY_ADD:
                 pop(proc.st, &y); //TODO correct highlighting in pop
                 pop(proc.st, &x);
                 push(proc.st, x + y);
-
-                // printf("ADD\n");
 
                 break;
 
@@ -100,16 +81,12 @@ int main(int argc, char** argv)
                 pop(proc.st, &x);
                 push(proc.st, x - y);
 
-                // printf("SUB\n");
-
                 break;
 
             case DISASSEMBLY_DIV:
                 pop(proc.st, &y); //TODO correct highlighting
                 pop(proc.st, &x);
                 push(proc.st, x / y);
-
-                // printf("DIV\n");
 
                 break;
 
@@ -118,15 +95,11 @@ int main(int argc, char** argv)
                 pop(proc.st, &x);
                 push(proc.st, x * y);
 
-                // printf("MUL\n");
-
                 break;
 
             case DISASSEMBLY_SQRT:
                 pop(proc.st, &x);
                 push(proc.st, (int)sqrt(x));
-
-                // printf("SQRT\n");
 
                 break;
 
@@ -209,7 +182,7 @@ int main(int argc, char** argv)
                 }
 
                 break;
-
+            // TODO define DISASSEMBLY_JUMP(JE, ==)
             case DISASSEMBLY_JE:
                 pop(proc.st, &y);
                 pop(proc.st, &x);
@@ -244,7 +217,7 @@ int main(int argc, char** argv)
 
                 break;
 
-            case DISASSEMBLY_JMP: //TODO говно
+            case DISASSEMBLY_JMP:
                 memcpy(shift, &(proc.commands[ip]), sizeof(int));
 
                 ip = *shift;
@@ -256,7 +229,6 @@ int main(int argc, char** argv)
                 ip += sizeof(int);
                 push(proc.functions_return_codes, ip);
                 ip = *shift;
-                // $DEBUG("%d\n", *shift);
 
                 break;
 
@@ -272,6 +244,7 @@ int main(int argc, char** argv)
                 break;
 
             case DISASSEMBLY_HLT:
+            // DTOR
                 stack_destroy(proc.st);
                 stack_destroy(proc.functions_return_codes);
 
@@ -279,7 +252,7 @@ int main(int argc, char** argv)
                 free(proc.ram);
                 free(proc.registers);
 
-                exit(0);
+                exit(0); // TODO do not use exit
 
             default:
                 color_printf(RED_TEXT, BOLD, "Command %d doesn't found\n", proc.commands[--ip]);
@@ -299,10 +272,6 @@ stack_elem* get_arg(processor* proc, int* ip, CMDS_DISASSEMBLY command,
     stack_elem* argument_address = NULL;
     stack_elem  ip_of_argument   = 0;
     stack_elem* argument_source  = NULL;
-
-    // printf("%d - m\n", memory);
-    // printf("%d - c\n", is_constant);
-    // printf("%d - r\n", is_reg);
 
     proc->registers[0] = 0;
     if(command == DISASSEMBLY_POP)

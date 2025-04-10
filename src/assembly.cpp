@@ -247,7 +247,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             number_of_cmd = 0;
             value_of_cmd  = 0;
             is_number     = 0;
-            memset(cmd, 0, MAX_CMD_SIZE); //TODO free; cmd = NULL;
+            memset(cmd, 0, MAX_CMD_SIZE);
         }
     }
     if(is_hlt == 0)
@@ -489,6 +489,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     //TODO also in create_cmd_description
     scan_command(**asm_commands, cmd);
     *asm_commands = begin_of_cmd;
+    strcat(cmd, ":");
     for(index_of_label = 0; index_of_label < assembly->size_of_labels_array; index_of_label++)
     {
         if(strcmp(cmd, assembly->tags[index_of_label].name) == 0)

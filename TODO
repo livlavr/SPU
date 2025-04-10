@@ -40,18 +40,15 @@
        адреса возврата хранятся в стэке - то есть мы перед тем как уйти в функцию добавляем место возврата в стэк (он отдельный или как?)
        наверно просто при выходе из функции идти в метку
 [] comments
-[] quadratic equation
 [x] add sqrt command
 [x] побитовые операции
 [x] make exception on [AX + 5] in text_processing
 [x] Bin and Asm in build
 [x] Пропуск пустых строчек
 [x] Добавить тест на то, что юзер забыл hlt
-[] Start with Ded flags
 [x] Теневой регистр - нулевая ячейка массива регистров
 [x] Сделать задержку между командами
 [] make output line of ERROR and It`s prototipe in assembly
-[] Капитальный въеб памяти
 [] strcmp из онегина?
 [] code generator
 [x] SPU структура с массивом команд и регистров
@@ -63,3 +60,4 @@
     i think it`s even better to make ndump, ncanary, nhash itc
 [] redo submodule processing in stack ("#include")
 [] should i do flags with bool type
+[] main processor

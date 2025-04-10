@@ -44,7 +44,8 @@ DED_FLAGS    = -D _DEBUG -ggdb2 -std=c++17 -O0 -Wall -Wextra -Weffc++           
 vpath %.o   $(BUILD_DIR)
 vpath %.cpp $(SRC_DIR)
 
-.PHONY: clean all
+.PHONY: fll quick_assembly quick_processor assembly disassembly processor
+
 all   :
 	clear
 	@mkdir -p build
