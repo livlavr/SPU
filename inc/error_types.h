@@ -9,6 +9,7 @@ enum TYPE_OF_ERROR {
     STAT_ERROR      = 5,
     CALLOC_ERROR    = 6,
     SUCCESS         = 7,
+    VALUE_ERROR     = 8
 };
 
 #endif

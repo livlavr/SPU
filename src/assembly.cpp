@@ -20,11 +20,12 @@ int main(int argc, char** argv)
     char* output_filename       = NULL;
     catch_filenames(argc, argv, &input_filename, &output_filename);
 
-    $DEBUG("%s", input_filename);
-    $DEBUG("%s", output_filename);
+    color_printf(YELLOW_COLOR, BOLD, "[ %s ] Start compilation ...\n", input_filename);
 
     fill_bin_cmds_array_bytes(input_filename,  &assembly);
     output_cmds_to_bin(output_filename, &assembly);
+
+    color_printf(GREEN_COLOR, BOLD, "[ %s ] Compiled successfuly\n", input_filename);
 
     return 0;
 }
@@ -32,8 +33,6 @@ int main(int argc, char** argv)
 TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array* assembly)
 {
     warning(assembly, POINTER_IS_NULL);
-
-    $DEBUG("%s", filename);
 
     FILE* asm_file = fopen(filename, "r");
 
@@ -74,7 +73,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     while(asm_commands < size_of_asm)
     {
         scan_command(*asm_commands, &cmd);
-        $DEBUG("%s", cmd);
 
         if(strcmp(ASSEMBLY_PUSH, cmd) == 0) // TODO strcmp == 0
         {
@@ -237,12 +235,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
         }
         if((asm_commands == begin_of_asm_commands + assembly->size_of_commands_array - 1) && number_of_compilation == 0)
         {
-            printf("End of first compilation\n");
-            for(size_t i = 0; i < assembly->size_of_labels_array; i++)
-            {
-                printf("%s ", assembly->tags[i].name);
-                printf("%d\n", assembly->tags[i].index_to_jmp);
-            }
             number_of_compilation++;
             asm_commands  = begin_of_asm_commands;
             number_of_cmd = 0;
@@ -420,7 +412,6 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
     {
         customAssert(false, PROGRAM_ERROR);
     }
-    $DEBUG("%d", int_value);
     (*number_of_cmd) += (int)sizeof(int);
     (**asm_commands)  = begin_of_cmd;
     (*asm_commands)++;
@@ -471,7 +462,6 @@ TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd,
 
         customAssert(false, VALUE_ERROR);
     }
-    $DEBUG("%2s", register_value);
     return SUCCESS;
 }
 
@@ -485,8 +475,6 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     char cmd[MAX_CMD_SIZE] = "";
 
     **asm_commands = strchr(**asm_commands, ' ') + 1;
-    //TODO simply create a new variable wtf a u doing
-    //TODO also in create_cmd_description
     scan_command(**asm_commands, cmd);
     *asm_commands = begin_of_cmd;
     strcat(cmd, ":");
@@ -495,8 +483,6 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
         if(strcmp(cmd, assembly->tags[index_of_label].name) == 0)
         {
             memcpy(&(assembly->commands[number_of_cmd]), &(assembly->tags[index_of_label].index_to_jmp), sizeof(int));
-
-            $DEBUG("%d", assembly->commands[number_of_cmd]);
 
             break;
         }
@@ -510,15 +496,15 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     return SUCCESS;
 }
 
-TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array* assembly) //TODO create file ifdoesn't exist
+TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array* assembly)
 {
     warning(assembly, POINTER_IS_NULL);
-    $DEBUG("%s", filename);
     FILE* bin = fopen(filename, "wb");
 
     if(bin == NULL)
     {
-        color_printf(RED_COLOR, BOLD, "File with %s name doesn't exist\n", filename); //TODO rename enum
+        color_printf(RED_COLOR, BOLD, "[ Error ] File with %s name doesn't exist\n", filename);
+        color_printf(YELLOW_COLOR, BOLD, "[ Hint! ] You probably didn't create a directory for the output file.\n");
 
         return FILE_OPEN_ERROR;
     }
