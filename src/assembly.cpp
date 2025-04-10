@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 
 TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array* assembly)
 {
-    check_expression(assembly, POINTER_IS_NULL);
+    warning(assembly, POINTER_IS_NULL);
 
     $DEBUG("%s", filename);
 
@@ -41,26 +41,26 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     {
         color_printf(RED_TEXT, BOLD, "File with %s name doesn't exist\n", filename);
 
-        warning(false, FILE_OPEN_ERROR);
+        customAssert(false, FILE_OPEN_ERROR);
     }
 
     size_t size_of_buffer = 0;
     size_of_text(filename, &(size_of_buffer));
 
     char* buffer = (char*)calloc(size_of_buffer, sizeof(char));
-    warning(buffer, CALLOC_ERROR);
+    customAssert(buffer, CALLOC_ERROR);
 
     fread(buffer, sizeof(char), size_of_buffer, asm_file);
     count_cmds(buffer, size_of_buffer, &(assembly->size_of_commands_array));
 
 
     char** asm_commands = (char**)calloc(assembly->size_of_commands_array, sizeof(char*));
-    warning(asm_commands, CALLOC_ERROR);
+    customAssert(asm_commands, CALLOC_ERROR);
 
     fill_commands(buffer, assembly->size_of_commands_array, asm_commands);
 
     assembly->commands = (char*)calloc(assembly->size_of_commands_array, sizeof(int));
-    warning(assembly->commands, CALLOC_ERROR);
+    customAssert(assembly->commands, CALLOC_ERROR);
 
     int    number_of_cmd         = 0;
     int    value_of_cmd          = 0;
@@ -216,7 +216,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
         {
             color_printf(RED_TEXT, BOLD, "Syntax error in assembly: Duplicate \"%s\" label.\n", cmd);
 
-            warning(false, VALUE_ERROR);
+            customAssert(false, VALUE_ERROR);
         }
         else if(cmd[strlen(cmd) - 1] == LABEL_NAME_ENDING)
         {
@@ -233,7 +233,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
             color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't find \"%s\" command.\n", cmd);
             color_printf(RED_TEXT, BOLD, "Command wrong or too long, MAX_CMD_SIZE = %lu\n", MAX_CMD_SIZE);
 
-            warning(false, VALUE_ERROR);
+            customAssert(false, VALUE_ERROR);
         }
         if((asm_commands == begin_of_asm_commands + assembly->size_of_commands_array - 1) && number_of_compilation == 0)
         {
@@ -255,7 +255,7 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     {
         color_printf(RED_TEXT, BOLD, "Syntax error in assembly: there's no \"HLT\" command in program.\n");
 
-        warning(false, INPUT_ERROR);
+        customAssert(false, INPUT_ERROR);
     }
     assembly->size_of_commands_array = number_of_cmd;
     fclose(asm_file);
@@ -269,8 +269,8 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
                                      int* number_of_cmd, CMDS_DISASSEMBLY disassembly_cmd)
 {
     //ASSEMBLY->COMMANDS point on command
-    check_expression(asm_commands, POINTER_IS_NULL);
-    check_expression(assembly,     POINTER_IS_NULL);
+    warning(asm_commands, POINTER_IS_NULL);
+    warning(assembly,     POINTER_IS_NULL);
 
     char register_value[2] = "";
     int  int_value         = 0;
@@ -338,7 +338,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
                 color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't PUSH / POP this"
                              "element: %50[^\n]\n", **asm_commands);
                 //TODO test this shit
-                warning(false, VALUE_ERROR);
+                customAssert(false, VALUE_ERROR);
         }
     }
     else if(disassembly_cmd == DISASSEMBLY_POP)
@@ -354,7 +354,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
             color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't POP this"
                          "element: \"%50[^\n]\".\n", register_value);
 
-            warning(false, VALUE_ERROR);
+            customAssert(false, VALUE_ERROR);
         }
     }
     else if(disassembly_cmd == DISASSEMBLY_PUSH)
@@ -414,12 +414,12 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
                 color_printf(RED_TEXT, BOLD, "Syntax error in assembly: can't PUSH this"
                              "element: \"%50[^\n]\".\n", **asm_commands);
                 //TODO test this shit
-                warning(false, VALUE_ERROR);
+                customAssert(false, VALUE_ERROR);
         }
     }
     else
     {
-        warning(false, PROGRAM_ERROR);
+        customAssert(false, PROGRAM_ERROR);
     }
     $DEBUG("%d", int_value);
     (*number_of_cmd) += (int)sizeof(int);
@@ -446,9 +446,9 @@ inline bool find_elem(char* elem, labels* array, int size_of_array)
 
 TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd, char* register_value)
 {
-    check_expression(assembly,      POINTER_IS_NULL);
-    check_expression(number_of_cmd, POINTER_IS_NULL);
-    check_expression(register_value,POINTER_IS_NULL);
+    warning(assembly,      POINTER_IS_NULL);
+    warning(number_of_cmd, POINTER_IS_NULL);
+    warning(register_value,POINTER_IS_NULL);
 
     if(strcmp(register_value, ASSEMBLY_REG_AX) == 0)
     {
@@ -470,7 +470,7 @@ TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd,
     {
         color_printf(RED_TEXT, BOLD, "Wrong argument: %s\n", register_value);
 
-        warning(false, VALUE_ERROR);
+        customAssert(false, VALUE_ERROR);
     }
     $DEBUG("%2s", register_value);
     return SUCCESS;
@@ -478,8 +478,8 @@ TYPE_OF_ERROR process_register(assembly_cmd_array* assembly, int* number_of_cmd,
 
 TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, char*** asm_commands)
 {
-    check_expression(assembly,     POINTER_IS_NULL);
-    check_expression(asm_commands, POINTER_IS_NULL);
+    warning(assembly,     POINTER_IS_NULL);
+    warning(asm_commands, POINTER_IS_NULL);
 
     size_t index_of_label = 0;
     char** begin_of_cmd   = *asm_commands;
@@ -505,7 +505,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     if(index_of_label == assembly->size_of_labels_array)
     {
         color_printf(RED_TEXT, BOLD, "This label doesn't exist: %s\n", cmd);
-        warning(false, VALUE_ERROR);
+        customAssert(false, VALUE_ERROR);
     }
 
     return SUCCESS;
@@ -513,7 +513,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
 
 TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array* assembly) //TODO create file ifdoesn't exist
 {
-    check_expression(assembly, POINTER_IS_NULL);
+    warning(assembly, POINTER_IS_NULL);
     $DEBUG("%s", filename);
     FILE* bin = fopen(filename, "wb");
 

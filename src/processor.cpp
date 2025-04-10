@@ -258,7 +258,7 @@ int main(int argc, char** argv) // TODO why are you writing all in main
             default:
                 color_printf(RED_TEXT, BOLD, "Command %d doesn't found\n", proc.commands[--ip]);
 
-                warning(false, VALUE_ERROR);
+                customAssert(false, VALUE_ERROR);
         }
     }
 }

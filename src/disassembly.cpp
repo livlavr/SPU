@@ -269,7 +269,7 @@ TYPE_OF_ERROR fill_asm_cmds_array(const char* filename, disassembly_cmd_array* d
             default:
                 color_printf(RED_TEXT, BOLD, "%d\n", bin_commands[number_of_cmd]);
 
-                warning(false, VALUE_ERROR);
+                customAssert(false, VALUE_ERROR);
         }
     }
 
@@ -292,7 +292,7 @@ bool find_elem(int number, int* array, int size_of_array)
 
 TYPE_OF_ERROR fill_poison(int* array, int size, int poison)
 {
-    check_expression(array, POINTER_IS_NULL);
+    warning(array, POINTER_IS_NULL);
 
     for(int index = 0; index < size; index ++)
     {
@@ -304,7 +304,7 @@ TYPE_OF_ERROR fill_poison(int* array, int size, int poison)
 
 TYPE_OF_ERROR int_to_str(int number, char* str)
 {
-    check_expression(str, POINTER_IS_NULL);
+    warning(str, POINTER_IS_NULL);
 
     int number_of_char = 0;
     int sign           = number;
@@ -347,8 +347,8 @@ inline void reverse_str(char* str, int length)
 
 TYPE_OF_ERROR process_register(const char* command, disassembly_cmd_array* disassembly, int* number_of_cmd, int cmd)
 {
-    check_expression(disassembly,   POINTER_IS_NULL);
-    check_expression(number_of_cmd, POINTER_IS_NULL);
+    warning(disassembly,   POINTER_IS_NULL);
+    warning(number_of_cmd, POINTER_IS_NULL);
 
     strcat(disassembly->commands, command);
     strcat(disassembly->commands, " ");
@@ -380,7 +380,7 @@ TYPE_OF_ERROR process_register(const char* command, disassembly_cmd_array* disas
             break;
         default :
             color_printf(RED_TEXT, BOLD, "Not a register: %d\n", cmd);
-            warning(false, VALUE_ERROR);
+            customAssert(false, VALUE_ERROR);
     }
 
     return SUCCESS;
@@ -388,7 +388,7 @@ TYPE_OF_ERROR process_register(const char* command, disassembly_cmd_array* disas
 
 TYPE_OF_ERROR output_cmds_to_asm(const char* filename, const disassembly_cmd_array* disassembly)
 {
-    check_expression(disassembly, POINTER_IS_NULL);
+    warning(disassembly, POINTER_IS_NULL);
 
     FILE* asm_file = fopen(filename, "w");
 
