@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include "error_types.h"
 #include "custom_asserts.h"
 #include "commands.h"
 #include "stack_public.h"

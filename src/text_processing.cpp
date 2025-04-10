@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <string.h>
 
+#include "error_types.h"
 #include "custom_asserts.h"
 #include "stack_public.h"
 #include "debug_macros.h"
