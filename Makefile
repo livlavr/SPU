@@ -47,7 +47,7 @@ vpath %.cpp $(SRC_DIR)
 .PHONY: fll quick_assembly quick_processor assembly disassembly processor
 
 all   :
-	clear
+	# clear
 	@mkdir -p build
 	make quick_assembly
 	make quick_processor
@@ -63,7 +63,6 @@ quick_processor : $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
 	$(addprefix $(SRC_DIR), $(STACK_SRC))) -o $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
 assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
-	clear
 	@mkdir -p build
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(ASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
@@ -71,7 +70,6 @@ assembly : $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	@printf "Do not type any flags to start assembly with default settings\n"
 
 disassembly : $(addprefix $(SRC_DIR), $(DISASSEMBLY_SRC))
-	clear
 	@mkdir -p build
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
 	@printf "$(GREEN_TEXT)$(DISASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
@@ -79,7 +77,6 @@ disassembly : $(addprefix $(SRC_DIR), $(DISASSEMBLY_SRC))
 	@printf "Do not type any flags to start processor with default settings\n"
 
 processor : $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
-	clear
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR),\
 	$(addprefix $(SRC_DIR), $(STACK_SRC))) -o $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 	@printf "$(GREEN_TEXT)$(PROCESSOR_TARGET) COMPILED$(DEFAULT_TEXT)\n"
