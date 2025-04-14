@@ -63,10 +63,10 @@ static const char* ASSEMBLY_SQRT   = "SQRT";
 
 
 
-const size_t MAX_NUMBER_OF_CMDS      = 50; //TODO delete all bad consts
+const size_t MAX_NUMBER_OF_CMDS      = 50; //TODO delete all useless consts
 const size_t MAX_CMD_SIZE            = 15;
-const size_t MAX_NUMBER_OF_LABELS    = 10;
-const size_t MAX_NUMBER_OF_REGISTERS = 5;
+const size_t MAX_NUMBER_OF_LABELS    = 20; //TODO check limits
+const size_t MAX_NUMBER_OF_REGISTERS = 4;
 const size_t SIZE_OF_RAM             = 900;
 const int    BYTE_COMMAND_MASK       = 248;
 const int    BYTE_FORMAT_MASK        = 7;

@@ -11,8 +11,6 @@
 #include "text_processing.h"
 #include "debug_macros.h"
 
-//TODO Static library
-
 int main(int argc, char** argv)
 {
     assembly_cmd_array assembly = {};
@@ -69,14 +67,14 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     char   cmd[MAX_CMD_SIZE]     = "";
     char** begin_of_asm_commands = asm_commands;
     char** size_of_asm           = begin_of_asm_commands + assembly->size_of_commands_array - 1;
-
+    int cnt = 0;
     while(asm_commands < size_of_asm)
     {
+        skip_spaces(&asm_commands);
         scan_command(*asm_commands, &cmd);
-
-        if(strcmp(ASSEMBLY_PUSH, cmd) == 0) // TODO strcmp == 0
+        if(strcmp(ASSEMBLY_PUSH, cmd) == 0)
         {
-            create_cmd_description(assembly, &asm_commands, &number_of_cmd, DISASSEMBLY_PUSH);//TODO rename
+            create_cmd_description(assembly, &asm_commands, &number_of_cmd, DISASSEMBLY_PUSH);
         }
         else if(strcmp(ASSEMBLY_POP, cmd) == 0)
         {
@@ -251,8 +249,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
     }
     assembly->size_of_commands_array = number_of_cmd;
     fclose(asm_file);
-    //TODO find place to free cmd
-    //TODO but it'll be very slow...?
 
     return SUCCESS;
 }
@@ -260,7 +256,6 @@ TYPE_OF_ERROR fill_bin_cmds_array_bytes(const char* filename, assembly_cmd_array
 TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_commands,
                                      int* number_of_cmd, CMDS_DISASSEMBLY disassembly_cmd)
 {
-    //ASSEMBLY->COMMANDS point on command
     warning(asm_commands, POINTER_IS_NULL);
     warning(assembly,     POINTER_IS_NULL);
 
@@ -269,6 +264,7 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
     char* begin_of_cmd = **asm_commands;
 
     **asm_commands = (strchr(**asm_commands, ' ') + 1);
+    skip_spaces(asm_commands);
 
     assembly->commands[(*number_of_cmd)] |= disassembly_cmd;
 
@@ -404,7 +400,6 @@ TYPE_OF_ERROR create_cmd_description(assembly_cmd_array* assembly, char*** asm_c
         {
                 color_printf(RED_COLOR, BOLD, "Syntax error in assembly: can't PUSH this"
                              "element: \"%50[^\n]\".\n", **asm_commands);
-                //TODO test this shit
                 customAssert(false, VALUE_ERROR);
         }
     }
@@ -475,6 +470,7 @@ TYPE_OF_ERROR process_label(assembly_cmd_array* assembly, int number_of_cmd, cha
     char cmd[MAX_CMD_SIZE] = "";
 
     **asm_commands = strchr(**asm_commands, ' ') + 1;
+    skip_spaces(asm_commands);
     scan_command(**asm_commands, cmd);
     *asm_commands = begin_of_cmd;
     strcat(cmd, ":");
@@ -510,6 +506,17 @@ TYPE_OF_ERROR output_cmds_to_bin(const char* filename, const assembly_cmd_array*
     }
 
     fwrite(assembly->commands, sizeof(char), assembly->size_of_commands_array, bin);
+
+    return SUCCESS;
+}
+
+TYPE_OF_ERROR skip_spaces(char*** asm_commands)
+{
+    warning(asm_commands, POINTER_IS_NULL);
+
+    while(***asm_commands == ' ' || ***asm_commands == '\t') {
+        (**asm_commands)++;
+    }
 
     return SUCCESS;
 }
