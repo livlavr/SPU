@@ -1,7 +1,0 @@
-PUSH 4
-CALL HUI
-SQRT
-OUT
-HUI:
-    OUT
-    HLT

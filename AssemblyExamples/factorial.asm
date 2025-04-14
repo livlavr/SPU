@@ -1,8 +1,9 @@
-IN
-POP AX
-CALL FACT
-PUSH BX
-OUT
+MAIN:
+    IN
+    POP AX
+    CALL FACT
+    PUSH BX
+    OUT
 HLT
 
 FACT:
